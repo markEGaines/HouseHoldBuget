@@ -15,14 +15,14 @@ namespace HouseHoldBuget.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "House Hold Budgeter - CoderFoundry Master Class Project";
 
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Contact Info:";
 
             return View();
         }
