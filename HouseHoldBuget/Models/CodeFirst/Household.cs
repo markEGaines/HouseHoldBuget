@@ -11,25 +11,28 @@ namespace HouseHoldBuget.Models
     {
         public Household()
         {
-            this.Acccounts = new HashSet<Acccount>();
-            this.Categorys = new HashSet<Category>();
+            this.Acccounts = new HashSet<BankAcccount>();
+            this.Categories = new HashSet<Category>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Acccount> Acccounts { get; set; }
-        public virtual ICollection<Category> Categorys { get; set; }
+        public virtual ICollection<BankAcccount> Acccounts { get; set; }
+        public virtual ICollection<Category> Categories { get; set; }
+        public virtual ICollection<ApplicationUser> Users { get; set; }
     }
 
-    public class Acccount
+    public class BankAcccount
     {
-        public Acccount()
+        public BankAcccount()
         {
             this.Transactions = new HashSet<Transaction>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Balance { get; set; }
+
+        public int HouseholdId { get; set; }
 
         public virtual ICollection<Transaction> Transactions { get; set; }
     }
@@ -43,6 +46,13 @@ namespace HouseHoldBuget.Models
         public DateTimeOffset date { get; set; }
         public decimal Amt { get; set; }
         public decimal ReconAmt { get; set; }
+
+        public int CategoryId { get; set; }
+        public int BankAccountId { get; set; }
+
+        public virtual Category Category { get; set; }
+        public virtual BankAcccount BankAcccount { get; set; }
+
     }
 
     public class Category
@@ -55,6 +65,8 @@ namespace HouseHoldBuget.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
+        public int HouseholdId { get; set; }
+
         public virtual ICollection<Transaction> Transactions { get; set; }
         public virtual ICollection<BudgetItem> BudgetItems { get; set; }
     }
@@ -65,9 +77,15 @@ namespace HouseHoldBuget.Models
         { }
         public int Id { get; set; }
         public string Desc { get; set; }
-        [DisplayFormat(DataFormatString = "{0:MM/yyyy}",
-        ApplyFormatInEditMode = true)]
-        public DateTimeOffset BudgetMonth { get; set; }
         public decimal BudgetAmt { get; set; }
+
+        public int CategoryId { get; set; }
+
+        public virtual Category Category { get; set; }
     }
 }
+
+
+//[DisplayFormat(DataFormatString = "{0:MM/yyyy}",
+//ApplyFormatInEditMode = true)]
+//public DateTimeOffset BudgetMonth { get; set; }

@@ -11,6 +11,10 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using HouseHoldBuget.Models;
+using System.Configuration;
+using System.Net.Mail;
+using System.Net;
+using SendGrid;
 
 namespace HouseHoldBuget
 {
@@ -18,7 +22,18 @@ namespace HouseHoldBuget
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
+            var username = ConfigurationManager.AppSettings["SendgridUsername"];
+            var password = ConfigurationManager.AppSettings["SendgridPassword"];
+            var from = ConfigurationManager.AppSettings["ContactEmail"];
+
+            // Create the email object first, then add the properties.
+            SendGridMessage myMessage = new SendGridMessage();
+            myMessage.AddTo(message.Destination);
+            myMessage.From = new MailAddress(from);
+            myMessage.Subject = message.Subject;
+            myMessage.Text = message.Body;
+            myMessage.Html = message.Body;
+
             return Task.FromResult(0);
         }
     }

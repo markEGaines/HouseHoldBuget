@@ -10,12 +10,7 @@ namespace HouseHoldBuget.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        public ApplicationUser()
-        {
-            this.Households = new HashSet<Household>();
-        }
-
-        public virtual ICollection<Household> Households { get; set; }
+        public virtual Household Households { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -37,5 +32,16 @@ namespace HouseHoldBuget.Models
         {
             return new ApplicationDbContext();
         }
+
+        public DbSet<Household> Households { get; set; }
+
+        public DbSet<BankAcccount> Accounts { get; set; }
+
+        public DbSet<Transaction> Transactions { get; set; }
+
+        public DbSet<BudgetItem> BudgetItems { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+
     }
 }
