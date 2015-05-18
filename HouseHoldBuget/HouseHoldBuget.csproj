@@ -443,6 +443,7 @@
     <Content Include="font\FontAwesome.otf" />
     <Content Include="js\plugins\datatables\img\Sorting icons.psd" />
     <Content Include="js\plugins\datepicker\less\datepicker.less" />
+    <None Include="Properties\PublishProfiles\mgaines-budgetbuilder.pubxml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />

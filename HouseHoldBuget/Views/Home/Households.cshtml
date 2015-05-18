@@ -13,13 +13,13 @@
                     <div class="portlet-header">
                         <h3>
                             <i class="fa fa-group"></i>
-                            Users
+                            Members
                         </h3>
-                        <ul class="portlet-tools pull-right">
+                        @*<ul class="portlet-tools pull-right">
                             <li>
                                 <button class="btn btn-md btn-primary right" data-toggle="modal" data-target="#invite">Invite</button>
                             </li>
-                        </ul>
+                        </ul>*@
 
                     </div>     <!-- /.portlet-header -->
                     <div class="portlet-content">
@@ -81,7 +81,24 @@
                     </div>
                 </div>
             </div> <!-- /.col-md-6 -->
-        </div>
+        </div> <!-- /row -->
+<row>
+
+@using (Html.BeginForm(null, null, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> × </button>
+                    <h4>Send an Invite to:</h4>
+                            <input type="email" size="80" name="InviteEmail" class="requiredfield" data-error-empty="Please enter an email address" data-error-invalid="Invalid email address">
+                            <button type="submit" class="btn btn-primary btn-small">Submit</button>
+                            <input type="hidden" name="HouseholdId" value="@Model.Id" />
+}
+
+</row>
+
+
+
+
 
 @using (Html.BeginForm(null, null, FormMethod.Post))
 {
