@@ -13,15 +13,16 @@ namespace HouseHoldBuget.Controllers
     public class HomeController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-         
+
         [Authorize]
         public ActionResult Index()
         {
             var userid = User.Identity.GetUserId();
             var user = db.Users.Find(userid);
-            if (user.Household == null)
+            if (user.HouseholdId == null)
             {
-                if (db.Invites.Any(h => h.InviteEmail == user.Email)) {
+                if (db.Invites.Any(h => h.InviteEmail == user.Email))
+                {
 
                     user.HouseholdId = db.Invites.FirstOrDefault(h => h.InviteEmail == user.Email).HouseholdId;  // find the hh Id of the invite
                     db.Entry(user).State = EntityState.Modified;
@@ -35,11 +36,11 @@ namespace HouseHoldBuget.Controllers
                     db.Entry(user).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Dashboard", "Home"); // add new household update user => goto dashboard
-                }                                              
+                }
             }
             else
             {
-                return RedirectToAction("Dashboard","Home");   // user has household => goto dashboard
+                return RedirectToAction("Dashboard", "Home");   // user has household => goto dashboard
             }
         }
 
@@ -48,18 +49,12 @@ namespace HouseHoldBuget.Controllers
             return View();
         }
 
-        
-        public ActionResult RemoveUser()
-        {
-            return View();
-        }
-        
         public ActionResult RemoveInvite(int id)
         {
             Invite invite = db.Invites.Find(id);
             db.Invites.Remove(invite);
             db.SaveChanges();
-            return RedirectToAction("Households","Home");
+            return RedirectToAction("Households", "Home");
             //return View();
         }
 
@@ -72,6 +67,20 @@ namespace HouseHoldBuget.Controllers
             Household household = db.Households.Find(user.HouseholdId);
 
             return View(household);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LeaveHousehold(Household household)
+        {
+                var userid = User.Identity.GetUserId();
+                var user = db.Users.Find(userid);
+                user.HouseholdId = null;
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
+            
+            return RedirectToAction("Index","Home");
         }
 
         [Authorize]

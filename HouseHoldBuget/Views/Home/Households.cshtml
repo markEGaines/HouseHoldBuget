@@ -15,12 +15,6 @@
                             <i class="fa fa-group"></i>
                             Members
                         </h3>
-                        @*<ul class="portlet-tools pull-right">
-                            <li>
-                                <button class="btn btn-md btn-primary right" data-toggle="modal" data-target="#invite">Invite</button>
-                            </li>
-                        </ul>*@
-
                     </div>     <!-- /.portlet-header -->
                     <div class="portlet-content">
                         <div class="table-responsive">
@@ -29,7 +23,6 @@
                                     <tr>
                                         <td>Members</td>
                                         <td>Joined</td>
-                                        <td>Remove</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -38,14 +31,30 @@
                                         <tr>
                                             <td>@Html.DisplayFor(modelItem => item.UserName)</td>
                                             <td>@Html.DisplayFor(modelItem => item.JoinDate)</td>
-                                            @*<td><button>Remove</button></td>*@
-                                            <td>@Html.ActionLink("Remove", "RemoveUser", new { id = item.Id })</td>
                                         </tr>
                                     }
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
+                    <row>
+
+                        @using (Html.BeginForm("LeaveHousehold", "Home"))
+                        {
+                            @Html.AntiForgeryToken()
+                            <h4>Leave</h4>
+                            <p>Leave your current household and start a new one.</p>
+                            <form action="">
+                                <input type="checkbox" required  id="leave" />
+                                I understand that I will no longer have access to my current household's accounts.
+
+                                <button type="submit"  class="btn btn-primary btn-small">Leave this household</button>
+                                <input type="hidden" name="HouseholdId" value="@Model.Id" />
+                            </form>
+                        }
+
+                    </row>
                 </div>
             </div> <!-- /.col-md-6 -->
             <div class="col-md-6">
@@ -73,58 +82,28 @@
                                         <tr>
                                             <td>@Html.DisplayFor(modelItem => item.InviteEmail)</td>
                                             <td>@Html.DisplayFor(modelItem => item.InviteDate)</td>
-                                            @*<td><button>Remove</button></td>*@
-                                            <td>@Html.ActionLink("Remove", "RemoveInvite", new { id = item.Id })</td>
+                                            <td>@Html.ActionLink("Cancel", "RemoveInvite", new { id = item.Id })</td>
                                         </tr>
                                     }
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
-            </div> <!-- /.col-md-6 -->
-        </div> <!-- /row -->
-<row>
 
-@using (Html.BeginForm(null, null, FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> × </button>
-                    <h4>Send an Invite to:</h4>
+                    <row>
+                        @using (Html.BeginForm(null, null, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <h4>Send an Invite to:</h4>
                             <input type="email" size="80" name="InviteEmail" class="requiredfield" data-error-empty="Please enter an email address" data-error-invalid="Invalid email address">
                             <button type="submit" class="btn btn-primary btn-small">Submit</button>
                             <input type="hidden" name="HouseholdId" value="@Model.Id" />
-}
-
-</row>
-
-
-
-
-
-@using (Html.BeginForm(null, null, FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="modal fade" id="invite" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> × </button>
-                    <h4 class="modal-title" id="myModalLabel">Send an Invite to:</h4>
+                        }
+                    </row>
                 </div>
-                <div class="modal-body">
-                    <p>
-                        <div class="form-group">
-                            <input type="email" name="InviteEmail" class="requiredfield" data-error-empty="Please enter an email address" data-error-invalid="Invalid email address">
-                            <button type="submit" class="btn btn-primary btn-small">Submit</button>
-                            <input type="hidden" name="HouseholdId" value="@Model.Id" />
-                        </div>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+            </div> <!-- /.col-md-6 -->
+        </div> <!-- /row -->
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
