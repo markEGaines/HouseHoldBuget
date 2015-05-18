@@ -48,6 +48,21 @@ namespace HouseHoldBuget.Controllers
             return View();
         }
 
+        
+        public ActionResult RemoveUser()
+        {
+            return View();
+        }
+        
+        public ActionResult RemoveInvite(int id)
+        {
+            Invite invite = db.Invites.Find(id);
+            db.Invites.Remove(invite);
+            db.SaveChanges();
+            return RedirectToAction("Households","Home");
+            //return View();
+        }
+
         [Authorize]
         public ActionResult Households()
         {

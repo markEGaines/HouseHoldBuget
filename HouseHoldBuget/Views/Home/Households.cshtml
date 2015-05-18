@@ -38,7 +38,8 @@
                                         <tr>
                                             <td>@Html.DisplayFor(modelItem => item.UserName)</td>
                                             <td>@Html.DisplayFor(modelItem => item.JoinDate)</td>
-                                            <td><button>Remove</button></td>
+                                            @*<td><button>Remove</button></td>*@
+                                            <td>@Html.ActionLink("Remove", "RemoveUser", new { id = item.Id })</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -72,7 +73,8 @@
                                         <tr>
                                             <td>@Html.DisplayFor(modelItem => item.InviteEmail)</td>
                                             <td>@Html.DisplayFor(modelItem => item.InviteDate)</td>
-                                            <td><button>Remove</button></td>
+                                            @*<td><button>Remove</button></td>*@
+                                            <td>@Html.ActionLink("Remove", "RemoveInvite", new { id = item.Id })</td>
                                         </tr>
                                     }
                                 </tbody>

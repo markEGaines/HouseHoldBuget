@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Accounts";
 }
-<div class="col-md-6">
+<div class="col-md-4">
     <p>
         @Html.ActionLink("Create New", "Create")
     </p>
@@ -32,7 +32,7 @@
                         </td>
                         <td>
                             @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                            @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
                             @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                         </td>
                     </tr>
@@ -40,7 +40,8 @@
             </tbody>
         </table>
     </div>
-</div>
+    
+</div> <!-- /.md4  -->
 
     @section Scripts {
         <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
