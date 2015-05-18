@@ -1,0 +1,156 @@
+﻿@model HouseHoldBuget.Models.Household
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.6/css/jquery.dataTables.css">
+@{
+    ViewBag.Title = "Households";
+}
+        <h4 class="heading-inline">
+            Household created by: &nbsp;&nbsp; @Model.CreatedBy  &nbsp;&nbsp; on: &nbsp;&nbsp; @Model.CreateDate
+        </h4>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="portlet">
+                    <div class="portlet-header">
+                        <h3>
+                            <i class="fa fa-group"></i>
+                            Users
+                        </h3>
+                        <ul class="portlet-tools pull-right">
+                            <li>
+                                <button class="btn btn-md btn-primary right" data-toggle="modal" data-target="#invite">Invite</button>
+                            </li>
+                        </ul>
+
+                    </div>     <!-- /.portlet-header -->
+                    <div class="portlet-content">
+                        <div class="table-responsive">
+                            <table id="hhUsers" class="display" cellspacing="0" width="100">
+                                <thead>
+                                    <tr>
+                                        <td>Members</td>
+                                        <td>Joined</td>
+                                        <td>Remove</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Users)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.JoinDate)</td>
+                                            <td><button>Remove</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /.col-md-6 -->
+            <div class="col-md-6">
+                <div class="portlet">
+                    <div class="portlet-header">
+                        <h3>
+                            <i class="fa fa-group"></i>
+                            Open Invitations
+                        </h3>
+                    </div>     <!-- /.portlet-header -->
+                    <div class="portlet-content">
+                        <div class="table-responsive">
+                            <table id="hhInvites" class="display text-nowrap" cellspacing="0" width="100">
+                                <thead>
+                                    <tr>
+                                        <td>Email</td>
+                                        <td>Invited</td>
+                                        <td>Cancel</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.Invites)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.InviteEmail)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.InviteDate)</td>
+                                            <td><button>Remove</button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /.col-md-6 -->
+        </div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal fade" id="invite" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> × </button>
+                    <h4 class="modal-title" id="myModalLabel">Send an Invite to:</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <div class="form-group">
+                            <input type="email" name="InviteEmail" class="requiredfield" data-error-empty="Please enter an email address" data-error-invalid="Invalid email address">
+                            <button type="submit" class="btn btn-primary btn-small">Submit</button>
+                            <input type="hidden" name="HouseholdId" value="@Model.Id" />
+                        </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#hhUsers').DataTable({
+                "paging": false,
+                "info": false,
+                "filter": false,
+                "order": [[1, "asc"]]
+            });
+        });
+        $(document).ready(function () {
+            $('#hhInvites').DataTable({
+                "paging": false,
+                "info": false,
+                "filter": false,
+                "order": [[1, "asc"]]
+            });
+        });
+    </script>
+    <script>
+        $('#menu_Dashboard').removeClass('active');
+        $('#menu_Households').addClass('active');
+        $('#menu_Accounts').removeClass('active');
+     </script>
+
+
+    <script src="~/js/plugins/icheck/jquery.icheck.min.js"></script>
+    <script src="~/js/plugins/select2/select2.js"></script>
+    @*<script src="~/js/plugins/tableCheckable/jquery.tableCheckable.js"></script>*@
+
+    <script src="~/js/App.js"></script>
+
+    @* <script src="~/js/libs/raphael-2.1.2.min.js"></script>*@
+    @* <script src="~/js/plugins/morris/morris.min.js"></script>*@
+
+    @* <script src="~/js/demos/charts/morris/area.js"></script>*@
+    @* <script src="~/js/demos/charts/morris/donut.js"></script>*@
+
+    @* <script src="~/js/plugins/sparkline/jquery.sparkline.min.js"></script>*@
+
+    @*   <script src="~/js/plugins/fullcalendar/fullcalendar.min.js"></script>*@
+    @* <script src="~/js/demos/calendar.js"></script>*@
+
+    <script src="~/js/demos/dashboard.js"></script>
+}

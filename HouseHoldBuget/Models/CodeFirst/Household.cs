@@ -11,15 +11,33 @@ namespace HouseHoldBuget.Models
     {
         public Household()
         {
-            this.Acccounts = new HashSet<BankAcccount>();
+            this.Accounts = new HashSet<BankAcccount>();
             this.Categories = new HashSet<Category>();
+            this.Users = new HashSet<ApplicationUser>();
+            this.Invites = new HashSet<Invite>();
         }
         public int Id { get; set; }
-        public string Name { get; set; }
+        public DateTimeOffset? CreateDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTimeOffset? UpdateDate { get; set; }
+        public string UpdatedBy { get; set; }
 
-        public virtual ICollection<BankAcccount> Acccounts { get; set; }
+        public virtual ICollection<BankAcccount> Accounts { get; set; }
         public virtual ICollection<Category> Categories { get; set; }
         public virtual ICollection<ApplicationUser> Users { get; set; }
+        public virtual ICollection<Invite> Invites { get; set; }
+    }
+
+    public class Invite
+    {
+        public Invite()
+        { }
+        public int Id { get; set; }
+        public string InviteEmail { get; set; }
+        public DateTimeOffset? InviteDate { get; set; }
+        public string Challenge { get; set; }
+
+        public int HouseholdId { get; set; }        
     }
 
     public class BankAcccount
@@ -30,7 +48,7 @@ namespace HouseHoldBuget.Models
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Balance { get; set; }
+        public decimal? Balance { get; set; }
 
         public int HouseholdId { get; set; }
 

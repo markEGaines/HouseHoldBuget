@@ -6,39 +6,96 @@
     <title>@ViewBag.Title - House Hold Budgeter</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,800italic,400,600,800" type="text/css">
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("House Hold Budgeter", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    <div id="wrapper">
+        <header id="header">
+            <h1 id="site-logo">
+                <a href="./Index">
+                    <img src="/Home/img/logos/logo.png" alt="Site Logo" />
+                </a>
+            </h1>
+
+            <a href="javascript:;" data-toggle="collapse" data-target=".top-bar-collapse" id="top-bar-toggle" class="navbar-toggle collapsed">
+                <i class="fa fa-cog"></i>
+            </a>
+
+            <a href="javascript:;" data-toggle="collapse" data-target=".sidebar-collapse" id="sidebar-toggle" class="navbar-toggle collapsed">
+                <i class="fa fa-reorder"></i>
+            </a>
+
+        </header>
+
+        <nav id="top-bar" class="collapse top-bar-collapse">
+
+            <ul class="nav navbar-nav pull-left">
+                <li class="">
+                    <a href="/Home/Index">
+                        <i class="fa fa-home"></i>
+                        Home
+                    </a>
+                </li>
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </nav> <!-- /#top-bar -->
+
+
+@if (this.User.Identity.IsAuthenticated)
+{
+            <div id="sidebar-wrapper" class="collapse sidebar-collapse">
+                <nav id="sidebar">
+                    <ul id="main-nav" class="open-active">
+                        <li id="menu_Dashboard" class="">
+                            <a href="/Home/Dashboard">
+                                <i class="fa fa-dashboard"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li id="menu_Households" class="">
+                            <a href="/Home/Households">
+                                <i class="fa fa-list-alt"></i>
+                                Households
+                            </a>
+                        </li>
+                        <li id="menu_Accounts" class="">
+                            <a href="/BankAccounts/Index">
+                                <i class="fa fa-list-alt"></i>
+                                Accounts
+                            </a>
+                        </li>
+                    </ul>
+                </nav> <!-- #sidebar -->
+            </div> <!-- /#sidebar-wrapper -->
+}
+        <div id="content">
+            <div id="content-header">
+                <h1>@ViewBag.Title</h1>
+                </div>
+            <div id="content-container">
+                @*<div class="container body-content">*@
+
+                    @RenderBody()
+                    <hr />
+                    <footer>
+                        <p>&copy; @DateTime.Now.Year - House Hold Budgeter</p>
+                    </footer>
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - House Hold Budgeter</p>
-        </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
 </body>
+
 </html>
+
+
+@*<div id="content">
+    <div id="content-header">
+        <h1>Blank Page</h1>
+    </div> <!-- #content-header -->
+    <div id="content-container">
+    </div> <!-- /#content-container -->
+</div> <!-- #content -->*@

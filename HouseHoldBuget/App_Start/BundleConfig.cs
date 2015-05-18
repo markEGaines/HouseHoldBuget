@@ -25,6 +25,13 @@ namespace HouseHoldBuget
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/css/font-awesome.min.css",                             // for Canvas theme
+                      "~/js/libs/css/ui-lightness/jquery-ui-1.9.2.custom.css",  // for Canvas theme
+                      "~/js/plugins/icheck/skins/minimal/blue.css",             // for Canvas theme
+                      "~/js/plugins/select2/select2.css",                       // for Canvas theme
+                      "~/js/plugins/fullcalendar/fullcalendar.css",             // for Canvas theme
+                      "~/Content/css/App.css",                                          // for Canvas theme
+                      "~/Content/css/custom.css",                                       // for Canvas theme
                       "~/Content/site.css"));
         }
     }

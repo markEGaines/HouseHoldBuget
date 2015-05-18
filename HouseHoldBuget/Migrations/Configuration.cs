@@ -26,16 +26,32 @@ namespace HouseHoldBuget.Migrations
 
                 userManager.Create(new ApplicationUser
                 {
-                    Households = new Household { Name = "markegaines@gmail.com" },
+                    Household = new Household { CreatedBy = "markegaines@gmail.com" , CreateDate = System.DateTimeOffset.Now },
+                    JoinDate = System.DateTimeOffset.Now,
                     UserName = "markegaines@gmail.com",
                     Email = "markegaines@gmail.com",
                     EmailConfirmed = true,
                 }, "Plugh4!");
             }
 
-            if (!context.Households.Any(hh => hh.Name == "Default")) { var hh = new Household { Name = "Default" }; context.Households.Add(hh); }
+            if (!context.Households.Any(hh => hh.CreatedBy == "markegaines@gmail.com")) { var hh = new Household { CreatedBy = "markegaines@gmail.com" }; context.Households.Add(hh); }
             context.SaveChanges();
-            var hhId = context.Households.FirstOrDefault(h => h.Name == "Default").Id;
+            var hhId = context.Households.FirstOrDefault(h => h.CreatedBy == "markegaines@gmail.com").Id;
+
+            if (!context.Users.Any(r => r.Email == "donaldfgaines@gmail.com"))
+            {
+                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+                userManager.Create(new ApplicationUser
+                {
+                    HouseholdId = hhId,
+                    JoinDate = System.DateTimeOffset.Now,
+                    UserName = "donaldfgaines@gmail.com",
+                    Email = "donaldfgaines@gmail.com",
+                    EmailConfirmed = true,
+                }, "Plugh4!");
+            }
+
 
             ConfigurationManager.AppSettings["Categories"].Split(';').ToList().ForEach(x =>
             {

@@ -1,0 +1,66 @@
+﻿@model IEnumerable<HouseHoldBuget.Models.BankAcccount>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.6/css/jquery.dataTables.css">
+@{
+    ViewBag.Title = "Accounts";
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="table-responsive">
+    <table id="accts" class="display" cellspacing="0" width="100">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Balance)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Balance)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('#accts').DataTable({
+                "paging": false,
+                "info": false,
+                "filter": false,
+                "order": [[0, "asc"]]
+            });
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $('#menu_Dashboard').removeClass('active');
+        $('#menu_Households').removeClass('active');
+        $('#menu_Accounts').addClass('active');
+    </script>
+
+}
