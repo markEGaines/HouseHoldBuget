@@ -1,0 +1,110 @@
+﻿@model IEnumerable<HouseHoldBuget.Models.Transaction>
+
+@{
+    ViewBag.Title = "Transactions";
+}
+<div id="content-header">
+    @*<h1>@ViewBag.Title for</h1>*@
+    <h1>
+        <label for="AccountId">Transactions for Account &nbsp;&nbsp; </label>
+        @Html.DropDownList("AccountId")
+    </h1>
+</div>
+<div id="content-container">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="portlet">
+                <div class="portlet-header">
+                    <h3>Edit Panel</h3>
+                </div> <!-- /.portlet-header -->
+                <div class="portlet-content">
+                    <p>Ajax stuff here</p>
+                </div> <!-- /.portlet-content -->
+            </div> <!-- /.portlet -->
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Desc)
+                    </th>
+                    <th>
+                        Category
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Amt)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ReconAmt)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UpdatedBy)
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Desc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReconAmt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdatedBy)
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#hhUsers').DataTable({
+                "paging": false,
+                "info": false,
+                "filter": false,
+                "order": [[1, "asc"]]
+            });
+        });
+    </script>
+    <script>
+        $('#menu_Dashboard').removeClass('active');
+        $('#menu_YourHousehold').removeClass('active');
+        $('#menu_Accounts').removeClass('active');
+        $('#menu_Transactions').addClass('active');
+    </script>
+
+
+    <script src="~/js/plugins/icheck/jquery.icheck.min.js"></script>
+    <script src="~/js/plugins/select2/select2.js"></script>
+    <script src="~/js/App.js"></script>
+    <script src="~/js/demos/dashboard.js"></script>
+}

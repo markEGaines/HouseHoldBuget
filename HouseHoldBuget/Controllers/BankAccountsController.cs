@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using HouseHoldBuget.Models;
+using HouseHoldBuget.Helpers;
 
 namespace HouseHoldBuget.Controllers
 {
@@ -15,7 +16,7 @@ namespace HouseHoldBuget.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         
         // GET: BankAccounts
-        [Authorize]
+        [RequireHousehold]
         public ActionResult Index()
         {
             var hhId = db.Households.FirstOrDefault(h => h.CreatedBy == User.Identity.Name).Id;
@@ -26,23 +27,23 @@ namespace HouseHoldBuget.Controllers
         }
 
         // GET: BankAccounts/Details/5
-        [Authorize]
+        [RequireHousehold]
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAcccount bankAcccount = db.Accounts.Find(id);
-            if (bankAcccount == null)
+            BankAccount bankAccount = db.Accounts.Find(id);
+            if (bankAccount == null)
             {
                 return HttpNotFound();
             }
-            return View(bankAcccount);
+            return View(bankAccount);
         }
 
         // GET: BankAccounts/Create
-        [Authorize]
+        [RequireHousehold]
         public ActionResult Create()
         {
             return View();
@@ -53,75 +54,77 @@ namespace HouseHoldBuget.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Balance,HouseholdId")] BankAcccount bankAcccount)
+        public ActionResult Create([Bind(Include = "Id,Name,Balance,HouseholdId")] BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
-                bankAcccount.HouseholdId = db.Households.FirstOrDefault(h => h.CreatedBy == User.Identity.Name).Id;
+                bankAccount.HouseholdId = db.Households.FirstOrDefault(h => h.CreatedBy == User.Identity.Name).Id;
 
-                db.Accounts.Add(bankAcccount);
+                db.Accounts.Add(bankAccount);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(bankAcccount);
+            return View(bankAccount);
         }
 
         // GET: BankAccounts/Edit/5
-        [Authorize]
+        [RequireHousehold]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAcccount bankAcccount = db.Accounts.Find(id);
-            if (bankAcccount == null)
+            BankAccount bankAccount = db.Accounts.Find(id);
+            if (bankAccount == null)
             {
                 return HttpNotFound();
             }
-            return View(bankAcccount);
+            return View(bankAccount);
         }
 
         // POST: BankAccounts/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [RequireHousehold]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Balance,HouseholdId")] BankAcccount bankAcccount)
+        public ActionResult Edit([Bind(Include = "Id,Name,Balance,HouseholdId")] BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(bankAcccount).State = EntityState.Modified;
+                db.Entry(bankAccount).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(bankAcccount);
+            return View(bankAccount);
         }
 
         // GET: BankAccounts/Delete/5
-        [Authorize]
+        [RequireHousehold]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAcccount bankAcccount = db.Accounts.Find(id);
-            if (bankAcccount == null)
+            BankAccount bankAccount = db.Accounts.Find(id);
+            if (bankAccount == null)
             {
                 return HttpNotFound();
             }
-            return View(bankAcccount);
+            return View(bankAccount);
         }
 
         // POST: BankAccounts/Delete/5
         [HttpPost, ActionName("Delete")]
+        [RequireHousehold]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            BankAcccount bankAcccount = db.Accounts.Find(id);
-            db.Accounts.Remove(bankAcccount);
+            BankAccount bankAccount = db.Accounts.Find(id);
+            db.Accounts.Remove(bankAccount);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -53,33 +53,47 @@ namespace HouseHoldBuget.Migrations
             }
 
 
-            ConfigurationManager.AppSettings["Categories"].Split(';').ToList().ForEach(x =>
-            {
-                context.Categories.Add(new Category() { Name = x, HouseholdId = hhId });
-            });
+            //ConfigurationManager.AppSettings["Categories"].Split(';').ToList().ForEach(x =>
+            //{
+            //    context.Categories.Add(new Category() { Name = x, HouseholdId = hhId });
+            //});
+            //context.SaveChanges();
+     
+            // Categories // Categories // Categories // Categories // Categories // Categories // Categories // Categories //
+            // Categories // Categories // Categories // Categories // Categories // Categories // Categories // Categories //
+            if (!context.Categories.Any(ts => ts.Name == "Income")) { var cat = new Category { HouseholdId = hhId, Name = "Income" }; context.Categories.Add(cat); }
+            if (!context.Categories.Any(ts => ts.Name == "Expenses")) { var cat = new Category { HouseholdId = hhId, Name = "Expenses" }; context.Categories.Add(cat); }
             context.SaveChanges();
 
-            if (!context.Categories.Any(ts => ts.Name == "Income")) { var cat = new Category { HouseholdId = hhId, Name = "Income" }; context.Categories.Add(cat); }
-            if (!context.Categories.Any(ts => ts.Name == "Bills")) { var cat = new Category { HouseholdId = hhId, Name = "Bills" }; context.Categories.Add(cat); }
-            context.SaveChanges();
+
+            // BudgetItems // BudgetItems // BudgetItems // BudgetItems // BudgetItems // BudgetItems // BudgetItems //
+            // BudgetItems // BudgetItems // BudgetItems // BudgetItems // BudgetItems // BudgetItems // BudgetItems //
 
             var catId = context.Categories.FirstOrDefault(c => c.Name == "Income").Id;
-
             if (!context.BudgetItems.Any(bi => bi.Desc == "Salary")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Salary" }; context.BudgetItems.Add(budgetItem); }
-            context.SaveChanges();
-
             if (!context.BudgetItems.Any(bi => bi.Desc == "Other")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Other" }; context.BudgetItems.Add(budgetItem); }
             context.SaveChanges();
 
-            catId = context.Categories.FirstOrDefault(c => c.Name == "Bills").Id;
-
-            if (!context.BudgetItems.Any(bi => bi.Desc == "Rent")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Rent" }; context.BudgetItems.Add(budgetItem); }
-            if (!context.BudgetItems.Any(bi => bi.Desc == "Phone")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Phone" }; context.BudgetItems.Add(budgetItem); }
-            if (!context.BudgetItems.Any(bi => bi.Desc == "Car")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Car" }; context.BudgetItems.Add(budgetItem); }
+            catId = context.Categories.FirstOrDefault(c => c.Name == "Expenses").Id;
+            if (!context.BudgetItems.Any(bi => bi.Desc == "Housing")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Housing" }; context.BudgetItems.Add(budgetItem); }
+            if (!context.BudgetItems.Any(bi => bi.Desc == "Utilities")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Utilities" }; context.BudgetItems.Add(budgetItem); }
+            if (!context.BudgetItems.Any(bi => bi.Desc == "Health/Medical")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Health/Medical" }; context.BudgetItems.Add(budgetItem); }
+            if (!context.BudgetItems.Any(bi => bi.Desc == "Transportation")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Transportation" }; context.BudgetItems.Add(budgetItem); }
             if (!context.BudgetItems.Any(bi => bi.Desc == "Other")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Other" }; context.BudgetItems.Add(budgetItem); }
+            if (!context.BudgetItems.Any(bi => bi.Desc == "Food/Entertainment")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Food/Entertainment" }; context.BudgetItems.Add(budgetItem); }
+            if (!context.BudgetItems.Any(bi => bi.Desc == "Children")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Children" }; context.BudgetItems.Add(budgetItem); }
+            if (!context.BudgetItems.Any(bi => bi.Desc == "Personal")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Personal" }; context.BudgetItems.Add(budgetItem); }
+            if (!context.BudgetItems.Any(bi => bi.Desc == "Savings")) { var budgetItem = new BudgetItem { CategoryId = catId, Desc = "Savings" }; context.BudgetItems.Add(budgetItem); }
             context.SaveChanges();
 
+            var trans = new Transaction { CategoryId = catId, Desc = "Something Silly" , Amt=100.01M, BankAccountId=1, date=System.DateTimeOffset.Parse("4/1/2015")}; context.Transactions.Add(trans);
 
+            trans = new Transaction { CategoryId = catId, Desc = "Something Even Worse", Amt = 200.01M, BankAccountId = 1, date = System.DateTimeOffset.Parse("4/2/2015") }; context.Transactions.Add(trans); 
+            trans = new Transaction { CategoryId = catId, Desc = "Car Payment", Amt = 1250.51M, BankAccountId = 1, date = System.DateTimeOffset.Parse("4/2/2015") }; context.Transactions.Add(trans);
+            
+            
+            context.SaveChanges();
+        
         }
     }
 }

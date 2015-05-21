@@ -7,6 +7,8 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity;
+using HouseHoldBuget.Helpers;
+using System.Threading.Tasks;
 
 namespace HouseHoldBuget.Controllers
 {
@@ -19,24 +21,9 @@ namespace HouseHoldBuget.Controllers
         {
             var userid = User.Identity.GetUserId();
             var user = db.Users.Find(userid);
-            if (user.HouseholdId == null)
+            if (!User.Identity.IsInHousehold())
             {
-                if (db.Invites.Any(h => h.InviteEmail == user.Email))
-                {
-
-                    user.HouseholdId = db.Invites.FirstOrDefault(h => h.InviteEmail == user.Email).HouseholdId;  // find the hh Id of the invite
-                    db.Entry(user).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Dashboard", "Home"); // add user to household => goto dashboard
-
-                }
-                else
-                {
-                    user.Household = new Household { CreatedBy = user.Email, CreateDate = System.DateTimeOffset.Now };
-                    db.Entry(user).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return RedirectToAction("Dashboard", "Home"); // add new household update user => goto dashboard
-                }
+                return RedirectToAction("CreateOrJoinHousehold", "Home");   // user NOT in household => goto CreateOrJoin
             }
             else
             {
@@ -44,11 +31,13 @@ namespace HouseHoldBuget.Controllers
             }
         }
 
+        [RequireHousehold]
         public ActionResult Dashboard()
         {
             return View();
         }
 
+        [RequireHousehold]
         public ActionResult RemoveInvite(int id)
         {
             Invite invite = db.Invites.Find(id);
@@ -58,32 +47,83 @@ namespace HouseHoldBuget.Controllers
             //return View();
         }
 
-        [Authorize]
+        [RequireHousehold]
         public ActionResult Households()
         {
-            var userid = User.Identity.GetUserId();
-            var user = db.Users.Find(userid);
+           var userid = User.Identity.GetUserId();
+           var user = db.Users.Find(userid);
 
-            Household household = db.Households.Find(user.HouseholdId);
+           Household household = db.Households.Find(user.HouseholdId);
+         //   Household household = db.Households.Find(User.Identity.GetHouseholdId());
 
             return View(household);
         }
 
         [Authorize]
+        public ActionResult CreateOrJoinHousehold()
+        {
+            var userid = User.Identity.GetUserId();
+            var user = db.Users.Find(userid);
+
+            if (user.HouseholdId != null)
+            {
+                RedirectToAction("Households", "Home");  // a user should not get here with a household already assigned
+            }
+
+            return View(db.Invites.Where(a => a.InviteEmail == user.Email).ToList());
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateOrJoinHousehold(string makeHH)
+        {
+            var userid = User.Identity.GetUserId();
+            var user = db.Users.Find(userid);
+            user.JoinDate = System.DateTimeOffset.Now;
+            user.Household = new Household { CreatedBy = user.Email, CreateDate = System.DateTimeOffset.Now };
+            db.Entry(user).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Dashboard", "Home"); // add new household update user => goto dashboard
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AcceptInvite(int inviteId)
+        {
+            var userid = User.Identity.GetUserId();
+            var user = db.Users.Find(userid);
+            user.JoinDate = System.DateTimeOffset.Now;
+            user.HouseholdId = db.Invites.Find(inviteId).HouseholdId;
+
+            db.Entry(user).State = EntityState.Modified;
+            db.SaveChanges();
+
+            await ControllerContext.HttpContext.RefreshAuthentication(user);
+
+            return RedirectToAction("Dashboard", "Home"); // add new household update user => goto dashboard            
+        }
+
+
+
+
+        [RequireHousehold]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LeaveHousehold(Household household)
         {
-                var userid = User.Identity.GetUserId();
-                var user = db.Users.Find(userid);
-                user.HouseholdId = null;
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-            
-            return RedirectToAction("Index","Home");
+            var userid = User.Identity.GetUserId();
+            var user = db.Users.Find(userid);
+            user.HouseholdId = null;
+            user.JoinDate = System.DateTimeOffset.Now;
+            db.Entry(user).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("CreateOrJoinHousehold", "Home");
         }
 
-        [Authorize]
+        [RequireHousehold]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Households([Bind(Include = "HouseholdId,InviteEmail")] Invite invite)
@@ -132,26 +172,3 @@ namespace HouseHoldBuget.Controllers
         }
     }
 }
-
-
-//[HttpPost]
-//[ValidateAntiForgeryToken]
-//public async Task<ActionResult> CreateComment([Bind(Include = "PostId,AuthorId,Created,Body")] Comment comment, string slug)
-//{
-//    if (ModelState.IsValid)
-//    {
-//        if (String.IsNullOrWhiteSpace(comment.Body))
-//        {
-//            ModelState.AddModelError("Body", "Missing Comment Text");
-//            return RedirectToAction("Details", new { Slug = slug });
-//        }
-//        comment.Created = System.DateTimeOffset.Now;
-//        comment.AuthorId = User.Identity.GetUserId();
-
-//        db.Comments.Add(comment);
-//        await db.SaveChangesAsync();
-//        return RedirectToAction("Details", new { Slug = slug });
-
-//    }
-//    return RedirectToAction("Details", new { Slug = slug });
-//}

@@ -52,10 +52,10 @@
                                 Dashboard
                             </a>
                         </li>
-                        <li id="menu_Households" class="">
+                        <li id="menu_YourHousehold" class="">
                             <a href="/Home/Households">
                                 <i class="fa fa-list-alt"></i>
-                                Households
+                               Household Manager
                             </a>
                         </li>
                         <li id="menu_Accounts" class="">
@@ -64,16 +64,22 @@
                                 Accounts
                             </a>
                         </li>
+                        <li id="menu_Transactions" class="">
+                            <a href="/Transactions/Index">
+                                <i class="fa fa-list-alt"></i>
+                                Transactions
+                            </a>
+                        </li>
                     </ul>
                 </nav> <!-- #sidebar -->
             </div> <!-- /#sidebar-wrapper -->
 }
         <div id="content">
-            <div id="content-header">
+            @*<div id="content-header">
                 <h1>@ViewBag.Title</h1>
                 </div>
-            <div id="content-container">
-                @*<div class="container body-content">*@
+            <div id="content-container">*@
+                
 
                     @RenderBody()
                     <hr />
@@ -82,7 +88,7 @@
                     </footer>
                 </div>
             </div>
-    </div>
+    @*</div>*@
 
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrap")
@@ -90,12 +96,3 @@
 </body>
 
 </html>
-
-
-@*<div id="content">
-    <div id="content-header">
-        <h1>Blank Page</h1>
-    </div> <!-- #content-header -->
-    <div id="content-container">
-    </div> <!-- /#content-container -->
-</div> <!-- #content -->*@

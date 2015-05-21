@@ -23,6 +23,7 @@ namespace HouseHoldBuget.Models
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+            userIdentity.AddClaim(new Claim("HouseholdId", this.HouseholdId.ToString()));
             return userIdentity;
         }
     }
@@ -41,7 +42,7 @@ namespace HouseHoldBuget.Models
 
         public DbSet<Household> Households { get; set; }
 
-        public DbSet<BankAcccount> Accounts { get; set; }
+        public DbSet<BankAccount> Accounts { get; set; }
 
         public DbSet<Transaction> Transactions { get; set; }
 

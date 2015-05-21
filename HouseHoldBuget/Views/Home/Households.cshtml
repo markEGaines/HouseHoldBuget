@@ -1,7 +1,7 @@
 ﻿@model HouseHoldBuget.Models.Household
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.6/css/jquery.dataTables.css">
 @{
-    ViewBag.Title = "Households";
+    ViewBag.Title = "Your Household";
 }
         <h4 class="heading-inline">
             Household created by: &nbsp;&nbsp; @Model.CreatedBy  &nbsp;&nbsp; on: &nbsp;&nbsp; @Model.CreateDate
@@ -126,11 +126,15 @@
             });
         });
     </script>
-    <script>
-        $('#menu_Dashboard').removeClass('active');
-        $('#menu_Households').addClass('active');
-        $('#menu_Accounts').removeClass('active');
-     </script>
+<script>
+    $('#menu_Dashboard').removeClass('active');
+    $('#menu_YourHousehold').addClass('active');
+    $('#menu_Accounts').removeClass('active');
+    $('#menu_Transactions').removeClass('active');
+</script>
+
+
+
 
 
     <script src="~/js/plugins/icheck/jquery.icheck.min.js"></script>
