@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - House Hold Budgeter</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/fontawesome")
     @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,800italic,400,600,800" type="text/css">
 </head>
@@ -17,13 +18,13 @@
                 </a>
             </h1>
 
-            <a href="javascript:;" data-toggle="collapse" data-target=".top-bar-collapse" id="top-bar-toggle" class="navbar-toggle collapsed">
+            @*<a href="javascript:;" data-toggle="collapse" data-target=".top-bar-collapse" id="top-bar-toggle" class="navbar-toggle collapsed">
                 <i class="fa fa-cog"></i>
             </a>
 
             <a href="javascript:;" data-toggle="collapse" data-target=".sidebar-collapse" id="sidebar-toggle" class="navbar-toggle collapsed">
                 <i class="fa fa-reorder"></i>
-            </a>
+            </a>*@
 
         </header>
 
@@ -65,7 +66,7 @@
                             </a>
                         </li>
                         <li id="menu_Transactions" class="">
-                            <a href="/Transactions/Index">
+                            <a href="/Accounts">
                                 <i class="fa fa-list-alt"></i>
                                 Transactions
                             </a>

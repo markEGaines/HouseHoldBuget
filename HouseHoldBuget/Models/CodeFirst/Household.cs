@@ -51,6 +51,7 @@ namespace HouseHoldBuget.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal? Balance { get; set; }
+        public decimal? ReconciledBalance { get; set; }
 
         public int HouseholdId { get; set; }
 

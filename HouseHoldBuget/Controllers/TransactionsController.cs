@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using HouseHoldBuget.Models;
 using HouseHoldBuget.Helpers;
+using Microsoft.AspNet.Identity;
 
 namespace HouseHoldBuget.Controllers
 {
@@ -24,7 +25,9 @@ namespace HouseHoldBuget.Controllers
 
             int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
 
-            var house = db.Households.Include(h => h.Accounts).Include(a=>a.Accounts.Select(t=>t.Transactions)).FirstOrDefault(hh => hh.Id == hhId);
+            var house = db.Households.Include(h => h.Accounts).Include(a => a.Accounts.Select(t => t.Transactions)).FirstOrDefault(hh => hh.Id == hhId);
+
+
 
             if (accountId == null)
             {
@@ -32,10 +35,12 @@ namespace HouseHoldBuget.Controllers
                 if (first != null)
                     accountId = first.Id;
             }
-                
-
 
             ViewBag.AccountId = new SelectList(house.Accounts.ToList(), "Id", "Name", accountId);
+            ViewBag.bankAccountId = accountId;
+
+            ViewBag.balance = db.BankAccounts.Find(accountId).Balance;
+            ViewBag.reconciledBalance = db.BankAccounts.Find(accountId).ReconciledBalance;
 
             if (accountId != null)
                 return View(house.Accounts.First(a => a.Id == accountId).Transactions.ToList());
@@ -58,10 +63,13 @@ namespace HouseHoldBuget.Controllers
         }
 
         // GET: Transactions/Create
-        public ActionResult Create()
+        public ActionResult Create(int? accountId)
         {
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
-            return View();
+            ViewBag.bankAccountId = accountId;
+            Transaction trx = new Transaction();
+            trx.BankAccountId = Convert.ToInt32(accountId);
+            return View(trx);
         }
 
         // POST: Transactions/Create
@@ -71,8 +79,25 @@ namespace HouseHoldBuget.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,date,Desc,CategoryId,Amt,ReconAmt,UpdatedBy,BankAccountId,CreateDate,CreatedBy,UpdateDate")] Transaction transaction)
         {
+            var userid = User.Identity.GetUserId();
+            var user = db.Users.Find(userid);
+
+            transaction.CreateDate = System.DateTimeOffset.Now;
+            transaction.CreatedBy = user.Email;
+            transaction.ReconAmt = 0;
+
+            var bankAccount = (from a in db.BankAccounts
+                               where a.Id == transaction.BankAccountId
+                               select a).FirstOrDefault();
+
+            if(bankAccount == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
             if (ModelState.IsValid)
             {
+
+                bankAccount.Balance += transaction.Amt;
+
                 db.Transactions.Add(transaction);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -107,6 +132,12 @@ namespace HouseHoldBuget.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userid = User.Identity.GetUserId();
+                var user = db.Users.Find(userid);
+
+                transaction.UpdatedBy = user.Email;
+                transaction.UpdateDate = System.DateTimeOffset.Now;
+
                 db.Entry(transaction).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

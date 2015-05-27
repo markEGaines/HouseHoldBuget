@@ -42,7 +42,7 @@ namespace HouseHoldBuget.Models
 
         public DbSet<Household> Households { get; set; }
 
-        public DbSet<BankAccount> Accounts { get; set; }
+        public DbSet<BankAccount> BankAccounts { get; set; }
 
         public DbSet<Transaction> Transactions { get; set; }
 

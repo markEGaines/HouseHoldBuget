@@ -21,7 +21,7 @@ namespace HouseHoldBuget.Controllers
         {
             var hhId = db.Households.FirstOrDefault(h => h.CreatedBy == User.Identity.Name).Id;
 
-            return View(db.Accounts.Where(a => a.HouseholdId == hhId));
+            return View(db.BankAccounts.Where(a => a.HouseholdId == hhId));
             
          //   return View(db.Accounts.ToList());
         }
@@ -34,7 +34,7 @@ namespace HouseHoldBuget.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAccount bankAccount = db.Accounts.Find(id);
+            BankAccount bankAccount = db.BankAccounts.Find(id);
             if (bankAccount == null)
             {
                 return HttpNotFound();
@@ -60,7 +60,7 @@ namespace HouseHoldBuget.Controllers
             {
                 bankAccount.HouseholdId = db.Households.FirstOrDefault(h => h.CreatedBy == User.Identity.Name).Id;
 
-                db.Accounts.Add(bankAccount);
+                db.BankAccounts.Add(bankAccount);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -76,7 +76,7 @@ namespace HouseHoldBuget.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAccount bankAccount = db.Accounts.Find(id);
+            BankAccount bankAccount = db.BankAccounts.Find(id);
             if (bankAccount == null)
             {
                 return HttpNotFound();
@@ -90,8 +90,10 @@ namespace HouseHoldBuget.Controllers
         [RequireHousehold]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Balance,HouseholdId")] BankAccount bankAccount)
+        public ActionResult Edit([Bind(Include = "Id,Name,Balance,ReconciledBalance")] BankAccount bankAccount)
         {
+            bankAccount.HouseholdId =  Convert.ToInt32(User.Identity.GetHouseholdId());
+
             if (ModelState.IsValid)
             {
                 db.Entry(bankAccount).State = EntityState.Modified;
@@ -99,6 +101,33 @@ namespace HouseHoldBuget.Controllers
                 return RedirectToAction("Index");
             }
             return View(bankAccount);
+        }
+
+
+        // POST: BankAccounts/BalanceReCalc/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [RequireHousehold]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult BalanceReCalc([Bind(Include = "Id,Name,Balance,ReconciledBalance")] BankAccount bankAccount)
+        {
+            bankAccount.HouseholdId = Convert.ToInt32(User.Identity.GetHouseholdId());
+
+            var trans = from t in db.Transactions
+                        where t.BankAccountId == bankAccount.Id
+                        select new { t.Amt, t.ReconAmt };
+
+            bankAccount.Balance = trans.ToList().Select(s => s.Amt).Sum();
+            bankAccount.ReconciledBalance = trans.ToList().Select(s => s.ReconAmt).Sum();                          
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(bankAccount).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Edit", "BankAccounts", new { bankAccount.Id });
+            }
+            return RedirectToAction("Edit", "BankAccounts", new { bankAccount.Id });
         }
 
         // GET: BankAccounts/Delete/5
@@ -109,7 +138,7 @@ namespace HouseHoldBuget.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAccount bankAccount = db.Accounts.Find(id);
+            BankAccount bankAccount = db.BankAccounts.Find(id);
             if (bankAccount == null)
             {
                 return HttpNotFound();
@@ -123,8 +152,8 @@ namespace HouseHoldBuget.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            BankAccount bankAccount = db.Accounts.Find(id);
-            db.Accounts.Remove(bankAccount);
+            BankAccount bankAccount = db.BankAccounts.Find(id);
+            db.BankAccounts.Remove(bankAccount);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
