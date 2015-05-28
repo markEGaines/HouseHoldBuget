@@ -76,7 +76,7 @@ namespace HouseHoldBuget.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateOrJoinHousehold(string makeHH)
+        public async Task<ActionResult> CreateOrJoinHousehold(string makeHH)
         {
             var userid = User.Identity.GetUserId();
             var user = db.Users.Find(userid);
@@ -84,6 +84,10 @@ namespace HouseHoldBuget.Controllers
             user.Household = new Household { CreatedBy = user.Email, CreateDate = System.DateTimeOffset.Now };
             db.Entry(user).State = EntityState.Modified;
             db.SaveChanges();
+            await ControllerContext.HttpContext.RefreshAuthentication(user);
+
+            BuildSampleCategories.BuildSample((int)user.HouseholdId);
+
             return RedirectToAction("Dashboard", "Home"); // add new household update user => goto dashboard
         }
 
@@ -111,7 +115,7 @@ namespace HouseHoldBuget.Controllers
         [RequireHousehold]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LeaveHousehold(Household household)
+        public async Task<ActionResult> LeaveHousehold(Household household)
         {
             var userid = User.Identity.GetUserId();
             var user = db.Users.Find(userid);
@@ -119,6 +123,8 @@ namespace HouseHoldBuget.Controllers
             user.JoinDate = System.DateTimeOffset.Now;
             db.Entry(user).State = EntityState.Modified;
             db.SaveChanges();
+
+            await ControllerContext.HttpContext.RefreshAuthentication(user);
 
             return RedirectToAction("CreateOrJoinHousehold", "Home");
         }

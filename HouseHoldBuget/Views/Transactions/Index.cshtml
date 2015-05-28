@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<HouseHoldBuget.Models.Transaction>
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
-
+@{
+    Layout = "/views/shared/_LayoutTransactions.cshtml";
+}
 <div id="content-header">
     <row>
         <div class="col-md-8" style="position:absolute; top:25%;">
@@ -48,8 +50,8 @@
                 <div class="portlet-header">
                     <h3>Edit / Create</h3>
                 </div> <!-- /.portlet-header -->
-                <div class="portlet-content">
-                    <p>Ajax stuff here</p>
+                <div id="indexEdit" class="portlet-content">
+                    @Html.Action("_IndexEdit", Model);
                 </div> <!-- /.portlet-content -->
             </div> <!-- /.portlet -->
         </div>

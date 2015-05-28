@@ -69,6 +69,7 @@ namespace HouseHoldBuget.Controllers
             ViewBag.bankAccountId = accountId;
             Transaction trx = new Transaction();
             trx.BankAccountId = Convert.ToInt32(accountId);
+            trx.date = System.DateTimeOffset.Now;
             return View(trx);
         }
 
@@ -84,13 +85,15 @@ namespace HouseHoldBuget.Controllers
 
             transaction.CreateDate = System.DateTimeOffset.Now;
             transaction.CreatedBy = user.Email;
+            transaction.UpdateDate = System.DateTimeOffset.Now;
+            transaction.UpdatedBy = user.Email;
             transaction.ReconAmt = 0;
 
             var bankAccount = (from a in db.BankAccounts
                                where a.Id == transaction.BankAccountId
                                select a).FirstOrDefault();
 
-            if(bankAccount == null)
+            if (bankAccount == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             if (ModelState.IsValid)
@@ -107,6 +110,24 @@ namespace HouseHoldBuget.Controllers
             return View(transaction);
         }
 
+        // GET: Transactions/IndexEdit/5
+        [ChildActionOnly]
+        public async Task<ActionResult> _IndexEdit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Transaction transaction = await db.Transactions.FindAsync(id);
+            if (transaction == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
+
+            return PartialView(transaction);
+        }
+
         // GET: Transactions/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
@@ -120,6 +141,7 @@ namespace HouseHoldBuget.Controllers
                 return HttpNotFound();
             }
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
+
             return View(transaction);
         }
 
@@ -130,15 +152,34 @@ namespace HouseHoldBuget.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,date,Desc,CategoryId,Amt,ReconAmt,UpdatedBy,BankAccountId,CreateDate,CreatedBy,UpdateDate")] Transaction transaction)
         {
+            var userid = User.Identity.GetUserId();
+            var user = db.Users.Find(userid);
+
+            var bankAccount = (from a in db.BankAccounts
+                               where a.Id == transaction.BankAccountId
+                               select a).FirstOrDefault();
+
+            if (bankAccount == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var delta = transaction.Amt - (from t in db.Transactions.AsNoTracking()
+                                           where t.Id == transaction.Id
+                                           select t).FirstOrDefault().Amt;
+
+            var deltaRecon = transaction.ReconAmt - (from t in db.Transactions.AsNoTracking()
+                                           where t.Id == transaction.Id
+                                           select t).FirstOrDefault().ReconAmt;
+
+            transaction.UpdatedBy = user.Email;
+            transaction.UpdateDate = System.DateTimeOffset.Now;
+
             if (ModelState.IsValid)
             {
-                var userid = User.Identity.GetUserId();
-                var user = db.Users.Find(userid);
-
-                transaction.UpdatedBy = user.Email;
-                transaction.UpdateDate = System.DateTimeOffset.Now;
+                bankAccount.Balance += delta;
+                bankAccount.ReconciledBalance += deltaRecon;
 
                 db.Entry(transaction).State = EntityState.Modified;
+                db.Entry(bankAccount).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -167,6 +208,20 @@ namespace HouseHoldBuget.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Transaction transaction = await db.Transactions.FindAsync(id);
+
+            var bankAccount = (from a in db.BankAccounts
+                               where a.Id == transaction.BankAccountId
+                               select a).FirstOrDefault();
+
+            if (bankAccount == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+
+            bankAccount.Balance -= transaction.Amt;
+            bankAccount.ReconciledBalance -= transaction.ReconAmt;
+
+
+            db.Entry(bankAccount).State = EntityState.Modified;
             db.Transactions.Remove(transaction);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

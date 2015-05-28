@@ -1,111 +1,112 @@
 ﻿@model HouseHoldBuget.Models.Household
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
+@{
+    ViewBag.Title = "Your Household";
+}
+@*<div id="content-header">
+        <h1>Your Household</h1>
+    </div>
+    <div id="content-container">*@
+<h4 class="heading-inline">
+    Household (@Model.Id) created by: &nbsp;&nbsp; @Model.CreatedBy  &nbsp;&nbsp; on: &nbsp;&nbsp; @Model.CreateDate 
+</h4>
 
-<div id="content-header">
-    <h1>Your Household</h1>
-</div>
-<div id="content-container">
-    <h4 class="heading-inline">
-        Household created by: &nbsp;&nbsp; @Model.CreatedBy  &nbsp;&nbsp; on: &nbsp;&nbsp; @Model.CreateDate
-    </h4>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="portlet">
-                <div class="portlet-header">
-                    <h3>
-                        <i class="fa fa-group"></i>
-                        Members
-                    </h3>
-                </div>     <!-- /.portlet-header -->
-                <div class="portlet-content">
-                    <div class="table-responsive">
-                        <table id="hhUsers" class="display" cellspacing="0" width="100">
-                            <thead>
+<div class="row">
+    <div class="col-md-6">
+        <div class="portlet">
+            <div class="portlet-header">
+                <h3>
+                    <i class="fa fa-group"></i>
+                    Members
+                </h3>
+            </div>     <!-- /.portlet-header -->
+            <div class="portlet-content">
+                <div class="table-responsive">
+                    <table id="hhUsers" class="display" cellspacing="0" width="100">
+                        <thead>
+                            <tr>
+                                <td>Members</td>
+                                <td>Joined</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Users)
+                            {
                                 <tr>
-                                    <td>Members</td>
-                                    <td>Joined</td>
+                                    <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.JoinDate)</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.Users)
-                                {
-                                    <tr>
-                                        <td>@Html.DisplayFor(modelItem => item.UserName)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.JoinDate)</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
                 </div>
-
-                <row>
-
-                    @using (Html.BeginForm("LeaveHousehold", "Home"))
-                    {
-                        @Html.AntiForgeryToken()
-                        <h4>Leave</h4>
-                        <p>Leave your current household and start a new one.</p>
-                        <form action="">
-                            <input type="checkbox" required id="leave" />
-                            I understand that I will no longer have access to my current household's accounts.
-
-                            <button type="submit" class="btn btn-primary btn-small">Leave this household</button>
-                            <input type="hidden" name="HouseholdId" value="@Model.Id" />
-                        </form>
-                    }
-
-                </row>
             </div>
-        </div> <!-- /.col-md-6 -->
-        <div class="col-md-6">
-            <div class="portlet">
-                <div class="portlet-header">
-                    <h3>
-                        <i class="fa fa-group"></i>
-                        Open Invitations
-                    </h3>
-                </div>     <!-- /.portlet-header -->
-                <div class="portlet-content">
-                    <div class="table-responsive">
-                        <table id="hhInvites" class="display text-nowrap" cellspacing="0" width="100">
-                            <thead>
-                                <tr>
-                                    <td>Email</td>
-                                    <td>Invited</td>
-                                    <td>Cancel</td>
-                                </tr>
-                            </thead>
-                            <tbody>
 
-                                @foreach (var item in Model.Invites)
-                                {
-                                    <tr>
-                                        <td>@Html.DisplayFor(modelItem => item.InviteEmail)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.InviteDate)</td>
-                                        <td>@Html.ActionLink("Cancel", "RemoveInvite", new { id = item.Id })</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <row>
 
-                <row>
-                    @using (Html.BeginForm(null, null, FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-                        <h4>Send an Invite to:</h4>
-                        <input type="email" size="80" name="InviteEmail" class="requiredfield" data-error-empty="Please enter an email address" data-error-invalid="Invalid email address">
-                        <button type="submit" class="btn btn-primary btn-small">Submit</button>
+                @using (Html.BeginForm("LeaveHousehold", "Home"))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Leave</h4>
+                    <p>Leave your current household and start a new one.</p>
+                    <form action="">
+                        <input type="checkbox" required id="leave" />
+                        I understand that I will no longer have access to my current household's accounts.
+
+                        <button type="submit" class="btn btn-primary btn-small">Leave this household</button>
                         <input type="hidden" name="HouseholdId" value="@Model.Id" />
-                    }
-                </row>
+                    </form>
+                }
+
+            </row>
+        </div>
+    </div> <!-- /.col-md-6 -->
+    <div class="col-md-6">
+        <div class="portlet">
+            <div class="portlet-header">
+                <h3>
+                    <i class="fa fa-group"></i>
+                    Open Invitations
+                </h3>
+            </div>     <!-- /.portlet-header -->
+            <div class="portlet-content">
+                <div class="table-responsive">
+                    <table id="hhInvites" class="display text-nowrap" cellspacing="0" width="100">
+                        <thead>
+                            <tr>
+                                <td>Email</td>
+                                <td>Invited</td>
+                                <td>Cancel</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.Invites)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.InviteEmail)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.InviteDate)</td>
+                                    <td>@Html.ActionLink("Cancel", "RemoveInvite", new { id = item.Id })</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div> <!-- /.col-md-6 -->
-    </div> <!-- /row -->
-</div>
+
+            <row>
+                @using (Html.BeginForm(null, null, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Send an Invite to:</h4>
+                    <input type="email" size="80" name="InviteEmail" class="requiredfield" data-error-empty="Please enter an email address" data-error-invalid="Invalid email address">
+                    <button type="submit" class="btn btn-primary btn-small">Submit</button>
+                    <input type="hidden" name="HouseholdId" value="@Model.Id" />
+                }
+            </row>
+        </div>
+    </div> <!-- /.col-md-6 -->
+</div> <!-- /row -->
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>

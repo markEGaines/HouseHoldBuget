@@ -19,7 +19,8 @@ namespace HouseHoldBuget.Controllers
         [RequireHousehold]
         public ActionResult Index()
         {
-            var hhId = db.Households.FirstOrDefault(h => h.CreatedBy == User.Identity.Name).Id;
+           
+            int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
 
             return View(db.BankAccounts.Where(a => a.HouseholdId == hhId));
             
@@ -58,7 +59,7 @@ namespace HouseHoldBuget.Controllers
         {
             if (ModelState.IsValid)
             {
-                bankAccount.HouseholdId = db.Households.FirstOrDefault(h => h.CreatedBy == User.Identity.Name).Id;
+                bankAccount.HouseholdId = Convert.ToInt32(User.Identity.GetHouseholdId());
 
                 db.BankAccounts.Add(bankAccount);
                 db.SaveChanges();
