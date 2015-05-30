@@ -1,0 +1,36 @@
+﻿@model HouseHoldBuget.Models.Transaction
+
+@{
+    ViewBag.Title = "Details";
+}
+<div>
+    <h4>Transaction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.Category.Name)</dt>
+        <dd>@Html.DisplayFor(model => model.Category.Name)</dd>
+        <dt>@Html.DisplayNameFor(model => model.date)</dt>
+        <dd>@Html.DisplayFor(model => model.date)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Desc)</dt>
+        <dd>@Html.DisplayFor(model => model.Desc)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Amt)</dt>
+        <dd>@Html.DisplayFor(model => model.Amt)</dd>
+        <dt>@Html.DisplayNameFor(model => model.ReconAmt)</dt>
+        <dd>@Html.DisplayFor(model => model.ReconAmt)</dd>
+        <dt>@Html.DisplayNameFor(model => model.UpdatedBy)</dt>
+        <dd>@Html.DisplayFor(model => model.UpdatedBy)</dd>
+        <dt>@Html.DisplayNameFor(model => model.BankAccountId)</dt>
+        <dd>@Html.DisplayFor(model => model.BankAccountId)</dd>
+        <dt>@Html.DisplayNameFor(model => model.CreateDate)</dt>
+        <dd>@Html.DisplayFor(model => model.CreateDate)</dd>
+        <dt>@Html.DisplayNameFor(model => model.CreatedBy)</dt>
+        <dd>@Html.DisplayFor(model => model.CreatedBy)</dd>
+        <dt>@Html.DisplayNameFor(model => model.UpdateDate)</dt>
+        <dd>@Html.DisplayFor(model => model.UpdateDate)</dd>
+        @Html.HiddenFor(model => model.BankAccountId)
+    </dl>
+</div>
+<p>
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |*@
+    @Html.ActionLink("Cancel", "Index", new { accountId = Model.BankAccountId})
+</p>

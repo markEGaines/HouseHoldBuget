@@ -48,7 +48,7 @@ namespace HouseHoldBuget.Controllers
         }
 
         // GET: Transactions/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> IndexDetails(int? id)
         {
             if (id == null)
             {
@@ -59,18 +59,18 @@ namespace HouseHoldBuget.Controllers
             {
                 return HttpNotFound();
             }
-            return View(transaction);
+            return PartialView(transaction);
         }
 
-        // GET: Transactions/Create
-        public ActionResult Create(int? accountId)
+        // GET: Transactions/IndexCreate
+        public ActionResult IndexCreate(int? accountId)
         {
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
             ViewBag.bankAccountId = accountId;
             Transaction trx = new Transaction();
             trx.BankAccountId = Convert.ToInt32(accountId);
             trx.date = System.DateTimeOffset.Now;
-            return View(trx);
+            return PartialView(trx);
         }
 
         // POST: Transactions/Create
@@ -78,7 +78,7 @@ namespace HouseHoldBuget.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,date,Desc,CategoryId,Amt,ReconAmt,UpdatedBy,BankAccountId,CreateDate,CreatedBy,UpdateDate")] Transaction transaction)
+        public async Task<ActionResult> IndexCreate([Bind(Include = "Id,date,Desc,CategoryId,Amt,ReconAmt,UpdatedBy,BankAccountId,CreateDate,CreatedBy,UpdateDate")] Transaction transaction)
         {
             var userid = User.Identity.GetUserId();
             var user = db.Users.Find(userid);
@@ -98,12 +98,11 @@ namespace HouseHoldBuget.Controllers
 
             if (ModelState.IsValid)
             {
-
                 bankAccount.Balance += transaction.Amt;
 
                 db.Transactions.Add(transaction);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { accountId = transaction.BankAccountId });
             }
 
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
@@ -111,8 +110,7 @@ namespace HouseHoldBuget.Controllers
         }
 
         // GET: Transactions/IndexEdit/5
-        [ChildActionOnly]
-        public async Task<ActionResult> _IndexEdit(int? id)
+        public async Task<ActionResult> IndexEdit(int? id)
         {
             if (id == null)
             {
@@ -124,33 +122,17 @@ namespace HouseHoldBuget.Controllers
                 return HttpNotFound();
             }
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
+            ViewBag.EditCreateTitle = "Edit";
 
             return PartialView(transaction);
         }
 
-        // GET: Transactions/Edit/5
-        public async Task<ActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Transaction transaction = await db.Transactions.FindAsync(id);
-            if (transaction == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
-
-            return View(transaction);
-        }
-
-        // POST: Transactions/Edit/5
+        // POST: Transactions/IndexEdit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,date,Desc,CategoryId,Amt,ReconAmt,UpdatedBy,BankAccountId,CreateDate,CreatedBy,UpdateDate")] Transaction transaction)
+        public async Task<ActionResult> IndexEdit([Bind(Include = "Id,date,Desc,CategoryId,Amt,ReconAmt,UpdatedBy,BankAccountId,CreateDate,CreatedBy,UpdateDate")] Transaction transaction)
         {
             var userid = User.Identity.GetUserId();
             var user = db.Users.Find(userid);
@@ -181,14 +163,14 @@ namespace HouseHoldBuget.Controllers
                 db.Entry(transaction).State = EntityState.Modified;
                 db.Entry(bankAccount).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { accountId = transaction.BankAccountId });
             }
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
             return View(transaction);
         }
 
         // GET: Transactions/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> IndexDelete(int? id)
         {
             if (id == null)
             {
@@ -199,11 +181,11 @@ namespace HouseHoldBuget.Controllers
             {
                 return HttpNotFound();
             }
-            return View(transaction);
+            return PartialView(transaction);
         }
 
         // POST: Transactions/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("IndexDelete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
@@ -224,7 +206,7 @@ namespace HouseHoldBuget.Controllers
             db.Entry(bankAccount).State = EntityState.Modified;
             db.Transactions.Remove(transaction);
             await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { accountId = transaction.BankAccountId });
         }
 
         protected override void Dispose(bool disposing)

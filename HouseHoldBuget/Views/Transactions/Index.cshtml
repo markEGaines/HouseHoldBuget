@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<HouseHoldBuget.Models.Transaction>
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
+
 @{
     Layout = "/views/shared/_LayoutTransactions.cshtml";
 }
@@ -42,16 +43,16 @@
 </div>
 <div id="content-container">
     <p>
-        @Html.ActionLink("Create New", "Create", new { accountId = @ViewBag.bankAccountId })
+        <button data-id=@ViewBag.bankAccountId class=" btn btn-xs btn-success create-button">Create</button>
     </p>
     <div class="row">
         <div class="col-md-4">
             <div class="portlet">
                 <div class="portlet-header">
-                    <h3>Edit / Create</h3>
+                    <h3>@ViewBag.EditCreateTitle   Edit / Create</h3>
                 </div> <!-- /.portlet-header -->
                 <div id="indexEdit" class="portlet-content">
-                    @Html.Action("_IndexEdit", Model);
+
                 </div> <!-- /.portlet-content -->
             </div> <!-- /.portlet -->
         </div>
@@ -73,9 +74,9 @@
                     {
                         <tr>
                             <td>
-                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                <button data-id="@item.Id" class="btn btn-xs btn-success edit-button">Edit</button> |
+                                @*<button data-id="@item.Id" class="btn btn-xs btn-secondary detail-button">Detail</button> |*@
+                                <button data-id="@item.Id" class="btn btn-xs btn-primary delete-button">Delete</button> 
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.date)</td>
                             <td>@Html.DisplayFor(modelItem => item.Desc)</td>
@@ -91,9 +92,13 @@
     </div>
 </div>
 
+@Scripts.Render("~/bundles/jqueryval")
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
     <script>
         $(document).ready(function () {
             $('#trans').DataTable({
@@ -120,4 +125,34 @@
     <script src="~/js/plugins/select2/select2.js"></script>
     <script src="~/js/App.js"></script>
     <script src="~/js/demos/dashboard.js"></script>
+
+    <script>
+        $('.create-button').click(function () {
+            var id = $(this).data("id");
+            $('#indexEdit').load('/Transactions/IndexCreate/?accountId=' + id);
+        })
+
+        $('.edit-button').click(function () {
+            var id = $(this).data("id");
+            $('#indexEdit').load('/Transactions/IndexEdit/' + id);
+        })
+
+        $('.detail-button').click(function () {
+            var id = $(this).data("id");
+            $('#indexEdit').load('/Transactions/IndexDetails/' + id);
+        })
+
+        $('.delete-button').click(function () {
+            var id = $(this).data("id");
+            $('#indexEdit').load('/Transactions/IndexDelete/' + id);
+        })
+    </script>
+
+
+
+    <script>
+        $(function () {
+            $("#tdate").datepicker()
+        });
+    </script>
 }
