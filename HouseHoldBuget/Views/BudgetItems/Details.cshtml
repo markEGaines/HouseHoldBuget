@@ -1,0 +1,58 @@
+﻿@model HouseHoldBuget.Models.BudgetItem
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>BudgetItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Desc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Desc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BudgetAmt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BudgetAmt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AnnualFreq)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AnnualFreq)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MonthlyBudgetAmt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MonthlyBudgetAmt)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

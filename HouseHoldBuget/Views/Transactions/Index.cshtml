@@ -76,7 +76,7 @@
                             <td>
                                 <button data-id="@item.Id" class="btn btn-xs btn-success edit-button">Edit</button> |
                                 @*<button data-id="@item.Id" class="btn btn-xs btn-secondary detail-button">Detail</button> |*@
-                                <button data-id="@item.Id" class="btn btn-xs btn-primary delete-button">Delete</button> 
+                                <button data-id="@item.Id" class="btn btn-xs btn-primary delete-button">Delete</button>
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.date)</td>
                             <td>@Html.DisplayFor(modelItem => item.Desc)</td>
@@ -114,7 +114,9 @@
         $('#menu_YourHousehold').removeClass('active');
         $('#menu_Accounts').removeClass('active');
         $('#menu_Transactions').addClass('active');
+        $('#menu_BudgetItems').removeClass('active');
     </script>
+
     <script>
         function SwitchAccount(val) {
             window.location.href = "/Accounts/" + val;

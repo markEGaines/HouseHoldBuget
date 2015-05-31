@@ -185,6 +185,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BankAccountsController.cs" />
+    <Compile Include="Controllers\BudgetItemsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
@@ -642,6 +643,12 @@
     <Content Include="Views\Shared\_LayoutTransactions.cshtml" />
     <Content Include="Views\Transactions\IndexEdit.cshtml" />
     <Content Include="Views\Transactions\IndexCreate.cshtml" />
+    <Content Include="Views\Home\DashboardBankAccounts.cshtml" />
+    <Content Include="Views\BudgetItems\Create.cshtml" />
+    <Content Include="Views\BudgetItems\Delete.cshtml" />
+    <Content Include="Views\BudgetItems\Details.cshtml" />
+    <Content Include="Views\BudgetItems\Edit.cshtml" />
+    <Content Include="Views\BudgetItems\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<HouseHoldBuget.Models.BankAccount>
+<div class="table-responsive">
+    <table id="accts" class="display text-nowrap" width="100">
+        <thead></thead>
+            @*<tr>
+                <th>@Html.DisplayNameFor(model => model.Name)</th>
+                <th>@Html.DisplayNameFor(model => model.Balance)</th>
+            </tr>*@
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Balance)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<script>
+    $('#accts').DataTable({
+        "paging": false,
+        "info": false,
+        "filter": false,
+        "order": [[1, "desc"]]
+
+    });
+</script>
+
+
+
+
+
+
+
+
+@*<script>
+        $(document).ready(function () {
+            $('#bankAccountTable').DataTable({
+                "order": [[1, "desc"]]
+            });
+
+            $('#bankAccountTable').on('click', 'tbody tr', function () {
+                var base = "@Url.Action("Accounts", "Transactions")"
+                var url = base + "/" + this.id
+                $('#linkbox').attr("href", url)
+                $('#linkbox')[0].click()
+            });
+        });
+    </script>*@
+

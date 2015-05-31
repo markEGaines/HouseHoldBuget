@@ -37,6 +37,14 @@ namespace HouseHoldBuget.Controllers
             return View();
         }
 
+        // GET: BankAccounts
+        [RequireHousehold]
+        public ActionResult DashboardBankAccounts()
+        {
+            int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
+            return PartialView(db.BankAccounts.Where(a => a.HouseholdId == hhId));
+        }
+
         [RequireHousehold]
         public ActionResult RemoveInvite(int id)
         {

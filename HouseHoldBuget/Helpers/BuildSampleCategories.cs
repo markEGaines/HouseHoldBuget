@@ -102,8 +102,6 @@ namespace HouseHoldBuget.Helpers
             db.BudgetItems.Add(new BudgetItem { CategoryId = catId, Desc = "Student Loan" });
             db.BudgetItems.Add(new BudgetItem { CategoryId = catId, Desc = "Legal Fees" });
             db.BudgetItems.Add(new BudgetItem { CategoryId = catId, Desc = "Alimony/child support paid" });
-            db.BudgetItems.Add(new BudgetItem { CategoryId = catId, Desc = "zzz" });
-            db.BudgetItems.Add(new BudgetItem { CategoryId = catId, Desc = "zzz" });
             db.SaveChanges();
 
             catId = (from c in db.Categories
