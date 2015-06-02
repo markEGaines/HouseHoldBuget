@@ -29,3 +29,16 @@ textarea {
 .dashboard-stat {
   padding: 25px 10px;
 }
+
+.loading {
+  position: absolute;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  color:black;
+}

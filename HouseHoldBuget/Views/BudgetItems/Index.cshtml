@@ -1,19 +1,17 @@
 ﻿@model IEnumerable<HouseHoldBuget.Models.BudgetItem>
-
 @{
     ViewBag.Title = "Budget Items";
 }
-
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
-        <th>@Html.DisplayNameFor(model => model.Category.Name)</th>
-        <th>@Html.DisplayNameFor(model => model.Desc)</th>
-        <th>@Html.DisplayNameFor(model => model.BudgetAmt)</th>
-        <th>@Html.DisplayNameFor(model => model.AnnualFreq)</th>
-        <th>@Html.DisplayNameFor(model => model.MonthlyBudgetAmt)</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Budget Amount</th>
+        <th>Annual Frequency</th>
+        <th>Monthly Budget Amt</th>
         <th></th>
     </tr>
 

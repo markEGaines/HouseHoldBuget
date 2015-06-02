@@ -1,26 +1,25 @@
 $(function () {
-	
+
     if (!$('#donut-chart').length) { return false; }
 
-	donut ();
+    donut();
 
-	$(window).resize (App.debounce (donut, 325));
+    $(window).resize(App.debounce(donut, 325));
 
 });
 
-function donut () {
-	$('#donut-chart').empty ();
+function donut() {
+    $('#donut-chart').empty();
+    $.post("/Home/GetChartData").then(function (response) {
+        console.log(response)
+        Morris.Donut({
+            element: 'donut-chart',
+            data: response.donutData,
+            colors: App.chartColors1,
+            hideHover: true,
+            formatter: function (y) { return y }
+        });
+    })
 
-	Morris.Donut({
-        element: 'donut-chart',
-        data: [
-            {label: 'Direct', value: 25 },
-            {label: 'Referrals', value: 40 },
-            {label: 'Search engines', value: 25 },
-            {label: 'Unique visitors', value: 10 }
-        ],
-        colors: App.chartColors,
-        hideHover: true,
-        formatter: function (y) { return y + "%" }
-    });
+    
 }

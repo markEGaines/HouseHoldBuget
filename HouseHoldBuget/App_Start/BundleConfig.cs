@@ -31,7 +31,8 @@ namespace HouseHoldBuget
                       "~/js/plugins/fullcalendar/fullcalendar.css",             // for Canvas theme
                       "~/Content/css/App.css",                                          // for Canvas theme
                       "~/Content/css/custom.css",                                       // for Canvas theme
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/font-awesome.min.css"));
         }
     }
 }

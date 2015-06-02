@@ -1,4 +1,5 @@
-﻿@{
+﻿@model HouseHoldBuget.Models.DashboardViewModel
+@{
     ViewBag.Title = "Dashboard";
 }
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
@@ -17,16 +18,58 @@
                 </h3>
             </div> <!-- /.portlet-header -->
             <div class="portlet-content">
-                @Html.Action("DashboardBankAccounts")
-            </div> <!-- /.portlet-content -->
-        </div> <!-- /.portlet -->
-
+                <div class="table-responsive">
+                    <table id="accts" style="cursor: pointer" class="display text-nowrap" cellspacing="0" width="100">
+                        <thead style="display:none;">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                @*<th></th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.bankInfo)
+                            {
+                                <tr id="@item.BankAccountId" class="account-link">
+                                    <td>@item.BankAccountName</td>
+                                    <td align="right">@item.BankAccountBalance</td>
+                                    @*<td>@Html.ActionLink("E", "Index", "Transactions", new { accountId = item.BankAccountId }, null)</td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div> <!-- /.portlet-content -->
+            </div> <!-- /.portlet -->
+        </div>
         <div class="portlet">
             <div class="portlet-header">
                 <h3>Recent Transactions</h3>
             </div>
             <div class="portlet-content">
-
+                <div class="table-responsive">
+                    <table id="trans" class="display text-nowrap" cellspacing="0" width="100">
+                        <thead style="display:none;">
+                            <tr>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.recentTransInfo)
+                            {
+                                <tr>
+                                    <td>
+                                        <p style="margin:0 0 0" >
+                                            @Html.DisplayFor(modelitem => item.date) &nbsp;-&nbsp; @item.BankAccount.Name
+                                        </p>
+                                        <p style="margin:0 0 0" >
+                                            @item.Desc &nbsp;-&nbsp; @item.Amt
+                                        </p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="portlet">
@@ -39,23 +82,38 @@
             <div class="portlet-content">
                 <div id="donut-chart" class="chart-holder" style="height: 250px"></div>
             </div> <!-- /.portlet-content -->
-
         </div>
     </div>
 
     <div class="col-md-9 align-right">
         <div class="portlet">
             <div class="portlet-header">
-                <h3>Budget</h3>
+                <h3>Budget </h3>
+                <div class="col-md-offset-1" style="position:absolute; top:15%;">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-sm btn-default barOpt active">
+                            <input type="radio" name="barOpt" value="barOpt1" checked> Current Month
+                        </label>
+                        <label class="btn btn-sm btn-default barOpt">
+                            <input type="radio" name="barOpt" value="barOpt2"> Last Month
+                        </label>
+                        <label class="btn btn-sm btn-default barOpt ">
+                            <input type="radio" name="barOpt" value="barOpt3"> Year to Date
+                        </label>
+                    </div>
+                </div>
             </div>
             <div class="portlet-content">
-                <div id="bar-chart" class="chart-holder" style="height:550px"></div>
+                <div class="loading" id="barLoader">
+                    <i class="fa fa-4x fa-spinner fa-spin"></i>
+                </div>
+                <div id="bar-chart" class="chart-holder" style="height:503px">
+
+                </div>
             </div>
         </div>
     </div>
-
-
-
+    <a id="linkbox"></a>
 
 </div>
 
@@ -64,7 +122,6 @@
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
 
     @Scripts.Render("~/bundles/jqueryval")
 
@@ -87,12 +144,62 @@
 
     <script src="~/js/demos/dashboard.js"></script>
 
-<script>
-    $('#menu_Dashboard').addClass('active');
-    $('#menu_YourHousehold').removeClass('active');
-    $('#menu_Accounts').removeClass('active');
-    $('#menu_Transactions').removeClass('active');
-    $('#menu_BudgetItems').removeClass('active');
-</script>
+    <script>
+        $('#menu_Dashboard').addClass('active');
+        $('#menu_YourHousehold').removeClass('active');
+        $('#menu_Accounts').removeClass('active');
+        $('#menu_Transactions').removeClass('active');
+        $('#menu_BudgetItems').removeClass('active');
+    </script>
+
+    <script>
+        $('body').on('click', '.account-link', function () {
+            console.log('clicked')
+            var base = '@Url.Action("Index", "Accounts")'
+            var url = base + "/" + this.id
+            console.log(url);
+            $('#linkbox').attr("href", url)
+            $('#linkbox')[0].click()
+        });
+
+            $('#accts').DataTable({
+                "paging": false,
+                "info": false,
+                "filter": false,
+                "order": [0, "asc"]
+            });
+
+
+            $('#trans').DataTable({
+                "paging": false,
+                "info": false,
+                "filter": false,
+                "order": [[0, "desc"]]
+            });
+
+            //function barHelper()
+            //{
+            //    console.log($('input[name="barOpt"]').val())
+            //    bar($('input[name="barOpt"]').val());
+            //}
+            
+            //$('body').on('click', '.barOpt', function () {
+            //    console.log($('input[name="barOpt"]:checked').val())
+            //    bar($('input[name="barOpt"]:checked').val());
+            //});
+
+
+            $('body').on('click', '.barOpt', function (event) {
+                 bar($(this).children('input').val());
+             });
+
+            //$(function () {
+            //    $('.barOpt').change(function () {
+            //        if ($(this).is(':checked')) {
+            //            bar($('input[name="barOpt"]:checked').val());
+            //        }
+            //    })
+            //});
+    </script>
 
 }

@@ -34,15 +34,72 @@ namespace HouseHoldBuget.Controllers
         [RequireHousehold]
         public ActionResult Dashboard()
         {
-            return View();
+            int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
+            var model = new DashboardViewModel();
+            var bankAccts = db.BankAccounts.Where(a => a.HouseholdId == hhId);
+            foreach (var b in bankAccts)
+            {
+                model.bankInfo.Add(new BankAccountInfo { BankAccountId = b.Id, BankAccountName = b.Name, BankAccountBalance = Convert.ToDecimal(b.Balance) });
+            }
+            var trans = (from b in db.BankAccounts
+                         from t in b.Transactions
+                         orderby t.date descending
+                         where b.HouseholdId == hhId
+                         select t).Take(5).ToList();
+
+            model.recentTransInfo = trans;
+
+            return View(model);
         }
 
-        // GET: BankAccounts
         [RequireHousehold]
-        public ActionResult DashboardBankAccounts()
+        public JsonResult GetChartData(string barOpt)
         {
-            int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
-            return PartialView(db.BankAccounts.Where(a => a.HouseholdId == hhId));
+            var hhId = Int32.Parse(User.Identity.GetHouseholdId());
+
+            var household = db.Households.Find(hhId);
+
+            var donutData = (from c in household.Categories
+                             where !c.IsIncomeCategory
+                             select new
+                             {
+                                 label = c.Name,
+                                 value = (from t in c.Transactions
+                                          select t.Amt).DefaultIfEmpty().Sum()
+                             }).ToList();
+
+            var dt = System.DateTimeOffset.Now;
+            var beginDate = new DateTime(dt.Year, dt.Month, 1);    /// this is barOpt1
+            var endDate = beginDate.AddMonths(1).AddDays(-1);      /// this is barOpt1
+                                                                   /// 
+            ViewBag.selected = "opt1";
+
+            if (barOpt == "barOpt2")
+            {
+                ViewBag.selected = "opt2";
+                beginDate = new DateTime(dt.Year, dt.Month, 1).AddMonths(-1);
+                endDate = beginDate.AddMonths(1).AddDays(-1);
+            }
+            else if (barOpt == "barOpt3")
+            {
+                ViewBag.selected = "opt3";
+                beginDate = new DateTime(dt.Year, 1, 1);
+                endDate = new DateTime(dt.Year, 12, 31);
+            }
+
+            var barData = (from c in household.Categories
+                           select new
+                           {
+                               label = c.Name,
+                               actual = (from t in c.Transactions
+                                         where (t.date <= endDate && t.date >= beginDate)
+                                         select t.Amt).DefaultIfEmpty().Sum(),
+                               budget = (from b in c.BudgetItems
+                                         select b.MonthlyBudgetAmt).DefaultIfEmpty().Sum()
+
+                           }).ToList();
+
+            return Json(new { donutData = donutData, barData = barData }, JsonRequestBehavior.AllowGet);
         }
 
         [RequireHousehold]
@@ -58,11 +115,11 @@ namespace HouseHoldBuget.Controllers
         [RequireHousehold]
         public ActionResult Households()
         {
-           var userid = User.Identity.GetUserId();
-           var user = db.Users.Find(userid);
+            var userid = User.Identity.GetUserId();
+            var user = db.Users.Find(userid);
 
-           Household household = db.Households.Find(user.HouseholdId);
-         //   Household household = db.Households.Find(User.Identity.GetHouseholdId());
+            Household household = db.Households.Find(user.HouseholdId);
+            //   Household household = db.Households.Find(User.Identity.GetHouseholdId());
 
             return View(household);
         }

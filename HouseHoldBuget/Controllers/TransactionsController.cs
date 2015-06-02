@@ -65,7 +65,9 @@ namespace HouseHoldBuget.Controllers
         // GET: Transactions/IndexCreate
         public ActionResult IndexCreate(int? accountId)
         {
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
+            int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
+            var cats = (from c in db.Categories where c.HouseholdId == hhId select c);
+            ViewBag.CategoryId = new SelectList(cats, "Id", "Name");
             ViewBag.bankAccountId = accountId;
             Transaction trx = new Transaction();
             trx.BankAccountId = Convert.ToInt32(accountId);
@@ -104,8 +106,9 @@ namespace HouseHoldBuget.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index", new { accountId = transaction.BankAccountId });
             }
-
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
+            int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
+            var cats = (from c in db.Categories where c.HouseholdId == hhId select c);
+            ViewBag.CategoryId = new SelectList(cats, "Id", "Name", transaction.CategoryId);
             return View(transaction);
         }
 
@@ -121,7 +124,9 @@ namespace HouseHoldBuget.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
+            int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
+            var cats = (from c in db.Categories where c.HouseholdId == hhId select c);
+            ViewBag.CategoryId = new SelectList(cats, "Id", "Name", transaction.CategoryId);
             ViewBag.EditCreateTitle = "Edit";
 
             return PartialView(transaction);
@@ -165,7 +170,9 @@ namespace HouseHoldBuget.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index", new { accountId = transaction.BankAccountId });
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
+            int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
+            var cats = (from c in db.Categories where c.HouseholdId == hhId select c);
+            ViewBag.CategoryId = new SelectList(cats, "Id", "Name", transaction.CategoryId);
             return View(transaction);
         }
 

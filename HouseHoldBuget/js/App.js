@@ -1,9 +1,11 @@
 var App = function () {
 	"use strict";
 
-	var chartColors = ['#e5412d', '#f0ad4e', '#444', '#888','#555','#999','#bbb','#ccc','#eee'];
+	var chartColors = ['#e5412d', '#f0ad4e', '#444', '#888', '#555', '#999', '#bbb', '#ccc', '#eee'];
+
+	var chartColors1 = ['#0047bd', '#0288d9', '#07b9fc', '#009543', '#00ab38', '#9af000', '#ffb300', '#ffce00', '#ffe63b', '#ea0034', '#fd4703', '#ff822a', '#8200ac', '#b610bf', '#cc72f5'];
 	
-	return { init: init, chartColors: chartColors, debounce: debounce };
+	return { init: init, chartColors: chartColors, chartColors1:chartColors1, debounce: debounce };
 
 	function init () {
 		initLayout ();	
