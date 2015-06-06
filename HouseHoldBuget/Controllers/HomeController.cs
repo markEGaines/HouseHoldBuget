@@ -119,7 +119,6 @@ namespace HouseHoldBuget.Controllers
             var user = db.Users.Find(userid);
 
             Household household = db.Households.Find(user.HouseholdId);
-            //   Household household = db.Households.Find(User.Identity.GetHouseholdId());
 
             return View(household);
         }
@@ -165,7 +164,8 @@ namespace HouseHoldBuget.Controllers
             var user = db.Users.Find(userid);
             user.JoinDate = System.DateTimeOffset.Now;
             user.HouseholdId = db.Invites.Find(inviteId).HouseholdId;
-
+            Invite invite = db.Invites.Find(inviteId);
+            db.Invites.Remove(invite);
             db.Entry(user).State = EntityState.Modified;
             db.SaveChanges();
 

@@ -18,27 +18,23 @@
                 </h3>
             </div> <!-- /.portlet-header -->
             <div class="portlet-content">
-                <div class="table-responsive">
-                    <table id="accts" style="cursor: pointer" class="display text-nowrap" cellspacing="0" width="100">
-                        <thead style="display:none;">
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                @*<th></th>*@
+                <table id="accts" style="cursor: pointer;zoom:1.3" class="display text-nowrap" cellspacing="0" width="100">
+                    <thead style="display:none;">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.bankInfo)
+                        {
+                            <tr id="@item.BankAccountId" class="account-link">
+                                <td>@item.BankAccountName</td>
+                                <td align="right">@item.BankAccountBalance</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.bankInfo)
-                            {
-                                <tr id="@item.BankAccountId" class="account-link">
-                                    <td>@item.BankAccountName</td>
-                                    <td align="right">@item.BankAccountBalance</td>
-                                    @*<td>@Html.ActionLink("E", "Index", "Transactions", new { accountId = item.BankAccountId }, null)</td>*@
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div> <!-- /.portlet-content -->
+                        }
+                    </tbody>
+                </table>
             </div> <!-- /.portlet -->
         </div>
         <div class="portlet">
@@ -46,30 +42,28 @@
                 <h3>Recent Transactions</h3>
             </div>
             <div class="portlet-content">
-                <div class="table-responsive">
-                    <table id="trans" class="display text-nowrap" cellspacing="0" width="100">
-                        <thead style="display:none;">
+                <table id="trans" class="display text-nowrap" style="zoom: 1.3" cellspacing="0" width="100">
+                    <thead style="display:none;">
+                        <tr>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.recentTransInfo)
+                        {
                             <tr>
-                                <th></th>
+                                <td>
+                                    <p style="margin:0 0 0">
+                                        @Html.DisplayFor(modelitem => item.date) &nbsp;-&nbsp; @item.BankAccount.Name
+                                    </p>
+                                    <p style="margin:0 0 0">
+                                        @item.Desc &nbsp;-&nbsp; @item.Amt
+                                    </p>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.recentTransInfo)
-                            {
-                                <tr>
-                                    <td>
-                                        <p style="margin:0 0 0" >
-                                            @Html.DisplayFor(modelitem => item.date) &nbsp;-&nbsp; @item.BankAccount.Name
-                                        </p>
-                                        <p style="margin:0 0 0" >
-                                            @item.Desc &nbsp;-&nbsp; @item.Amt
-                                        </p>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="portlet">
@@ -162,44 +156,44 @@
             $('#linkbox')[0].click()
         });
 
-            $('#accts').DataTable({
-                "paging": false,
-                "info": false,
-                "filter": false,
-                "order": [0, "asc"]
-            });
+        $('#accts').DataTable({
+            "paging": false,
+            "info": false,
+            "filter": false,
+            "order": [0, "asc"]
+        });
 
 
-            $('#trans').DataTable({
-                "paging": false,
-                "info": false,
-                "filter": false,
-                "order": [[0, "desc"]]
-            });
+        $('#trans').DataTable({
+            "paging": false,
+            "info": false,
+            "filter": false,
+            "order": [[0, "desc"]]
+        });
 
-            //function barHelper()
-            //{
-            //    console.log($('input[name="barOpt"]').val())
-            //    bar($('input[name="barOpt"]').val());
-            //}
-            
-            //$('body').on('click', '.barOpt', function () {
-            //    console.log($('input[name="barOpt"]:checked').val())
-            //    bar($('input[name="barOpt"]:checked').val());
-            //});
+        //function barHelper()
+        //{
+        //    console.log($('input[name="barOpt"]').val())
+        //    bar($('input[name="barOpt"]').val());
+        //}
+
+        //$('body').on('click', '.barOpt', function () {
+        //    console.log($('input[name="barOpt"]:checked').val())
+        //    bar($('input[name="barOpt"]:checked').val());
+        //});
 
 
-            $('body').on('click', '.barOpt', function (event) {
-                 bar($(this).children('input').val());
-             });
+        $('body').on('click', '.barOpt', function (event) {
+            bar($(this).children('input').val());
+        });
 
-            //$(function () {
-            //    $('.barOpt').change(function () {
-            //        if ($(this).is(':checked')) {
-            //            bar($('input[name="barOpt"]:checked').val());
-            //        }
-            //    })
-            //});
+        //$(function () {
+        //    $('.barOpt').change(function () {
+        //        if ($(this).is(':checked')) {
+        //            bar($('input[name="barOpt"]:checked').val());
+        //        }
+        //    })
+        //});
     </script>
 
 }
