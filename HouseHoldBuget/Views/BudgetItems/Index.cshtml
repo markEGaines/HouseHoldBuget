@@ -1,43 +1,154 @@
 ﻿@model IEnumerable<HouseHoldBuget.Models.BudgetItem>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
 @{
-    ViewBag.Title = "Budget Items";
+    Layout = "/views/shared/_LayoutTransactions.cshtml";
 }
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>Category</th>
-        <th>Description</th>
-        <th>Budget Amount</th>
-        <th>Annual Frequency</th>
-        <th>Monthly Budget Amt</th>
-        <th></th>
-    </tr>
+<div id="content-header">
+    <row>
+        <div class="col-md-8" style="position:absolute; top:25%;">
+            <h2>
+                <label for="AccountId">Budget Items </label>
+            </h2>
+        </div>
+        <div class="col-md-4 col-md-offset-8">
+            <div class="col-md-6">
+                <a href="javascript:;" class="dashboard-stat secondary">
+                    <div class="visual">
+                        <i class="fa fa-shopping-cart"></i>
+                    </div> <!-- /.visual -->
+                    <div class="details">
+                        <span class="content">Budget Income</span>
+                        <span class="value">@ViewBag.budgetIncome</span>
+                    </div> <!-- /.details -->
+                    <i class="fa fa-play-circle more"></i>
+                </a> <!-- /.dashboard-stat -->
+            </div> <!-- /.col-md-3 -->
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
-            <td>@Html.DisplayFor(modelItem => item.Desc)</td>
-            <td>@Html.DisplayFor(modelItem => item.BudgetAmt)</td>
-            <td>@Html.DisplayFor(modelItem => item.AnnualFreq)</td>
-            <td>@Html.DisplayFor(modelItem => item.MonthlyBudgetAmt)</td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-    }
+            <div class="col-md-6">
+                <a href="javascript:;" class="dashboard-stat primary">
+                    <div class="visual">
+                        <i class="fa fa-shopping-cart"></i>
+                    </div> <!-- /.visual -->
+                    <div class="details">
+                        <span class="content">Budget Spending</span>
+                        <span class="value">@ViewBag.budgetSpending</span>
+                    </div> <!-- /.details -->
+                    <i class="fa fa-play-circle more"></i>
+                </a> <!-- /.dashboard-stat -->
+            </div> <!-- /.col-md-3 -->
+        </div>
+    </row>
+</div>
+<div id="content-container">
+    <p>
+        <button class=" btn btn-xs btn-success create-button">Create</button>
+    </p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="portlet">
+                <div class="portlet-header">
+                    <h3>@ViewBag.EditCreateTitle   Edit / Create</h3>
+                </div> <!-- /.portlet-header -->
+                <div id="indexEdit" class="portlet-content">
 
-</table>
+                </div> <!-- /.portlet-content -->
+            </div> <!-- /.portlet -->
+        </div>
+        <div class="col-md-8">
+            <div class="table-responsive">
+                <table id="trans" class="display text-nowrap" cellspacing="0" width="100">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Budget Amount</th>
+                            <th>Annual Frequency</th>
+                            <th>Monthly Budget Amt</th>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <button data-id="@item.Id" class="btn btn-xs btn-success edit-button">Edit</button> |
+                                <button data-id="@item.Id" class="btn btn-xs btn-primary delete-button">Delete</button>
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Desc)</td>
+                            <td>@Html.DisplayFor(modelItem => item.BudgetAmt)</td>
+                            <td>@Html.DisplayFor(modelItem => item.AnnualFreq)</td>
+                            <td>@Html.DisplayFor(modelItem => item.MonthlyBudgetAmt)</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
 @section Scripts {
+
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#trans').DataTable({
+                "paging": true,
+                "info": true,
+                "filter": true,
+                "order": [[1, "asc"]]
+            });
+        });
+    </script>
     <script>
         $('#menu_Dashboard').removeClass('active');
         $('#menu_YourHousehold').removeClass('active');
         $('#menu_Accounts').removeClass('active');
         $('#menu_Transactions').removeClass('active');
         $('#menu_BudgetItems').addClass('active');
+    </script>
+
+    <script>
+        function SwitchAccount(val) {
+            window.location.href = "/Accounts/" + val;
+        }
+    </script>
+
+    <script src="~/js/plugins/icheck/jquery.icheck.min.js"></script>
+    <script src="~/js/plugins/select2/select2.js"></script>
+    <script src="~/js/App.js"></script>
+    <script src="~/js/demos/dashboard.js"></script>
+
+    <script>
+        $('.create-button').click(function () {
+            //var id = $(this).data("id");
+            $('#indexEdit').load('/BudgetItems/IndexCreate/');
+        })
+
+        $('.edit-button').click(function () {
+            var id = $(this).data("id");
+            $('#indexEdit').load('/BudgetItems/IndexEdit/' + id);
+        })
+
+        $('.detail-button').click(function () {
+            var id = $(this).data("id");
+            $('#indexEdit').load('/BudgetItems/IndexDetails/' + id);
+        })
+
+        $('.delete-button').click(function () {
+            var id = $(this).data("id");
+            $('#indexEdit').load('/BudgetItems/IndexDelete/' + id);
+        })
+    </script>
+
+
+
+    <script>
+        $(function () {
+            $("#tdate").datepicker()
+        });
     </script>
 }

@@ -66,19 +66,7 @@
                 </table>
             </div>
         </div>
-        <div class="portlet">
-            <div class="portlet-header">
-                <h3>
-                    <i class="fa fa-bar-chart-o"></i>
-                    Spending
-                </h3>
-            </div> <!-- /.portlet-header -->
-            <div class="portlet-content">
-                <div id="donut-chart" class="chart-holder" style="height: 250px"></div>
-            </div> <!-- /.portlet-content -->
-        </div>
     </div>
-
     <div class="col-md-9 align-right">
         <div class="portlet">
             <div class="portlet-header">
@@ -101,15 +89,59 @@
                 <div class="loading" id="barLoader">
                     <i class="fa fa-4x fa-spinner fa-spin"></i>
                 </div>
-                <div id="bar-chart" class="chart-holder" style="height:503px">
+                <div id="bar-chart" class="chart-holder" style="height:535px">
 
                 </div>
             </div>
         </div>
     </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="portlet">
+            <div class="portlet-header">
+                <h3>
+                    <i class="fa fa-bar-chart-o"></i>
+                    Spending
+                </h3>
+            </div> <!-- /.portlet-header -->
+            <div class="portlet-content">
+                <div id="donut-chart" class="chart-holder" style="height: 250px"></div>
+            </div> <!-- /.portlet-content -->
+        </div>
+    </div>
+    <div class="col-md-9 align-right">
+        <div class="portlet">
+            <div class="portlet-header">
+                <h3>Spending over time for all or selected categories</h3>
+                <div class="col-md-offset-4" style="position:absolute; top:15%;">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-sm btn-default barOpt active">
+                            <input type="radio" name="barOpt" value="barOpt1" checked> Current Month
+                        </label>
+                        <label class="btn btn-sm btn-default barOpt">
+                            <input type="radio" name="barOpt" value="barOpt2"> Last Month
+                        </label>
+                        <label class="btn btn-sm btn-default barOpt ">
+                            <input type="radio" name="barOpt" value="barOpt3"> Year to Date
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-content">
+                <div class="loading" id="xbarLoader">
+                    @*<i class="fa fa-4x fa-spinner fa-spin"></i>*@
+                </div>
+                <div id="xbar-chart" class="chart-holder" style="height:250px">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <a id="linkbox"></a>
 
-</div>
+</div>   
 
 @section Scripts {
 
@@ -163,7 +195,6 @@
             "order": [0, "asc"]
         });
 
-
         $('#trans').DataTable({
             "paging": false,
             "info": false,
@@ -171,29 +202,10 @@
             "order": [[0, "desc"]]
         });
 
-        //function barHelper()
-        //{
-        //    console.log($('input[name="barOpt"]').val())
-        //    bar($('input[name="barOpt"]').val());
-        //}
-
-        //$('body').on('click', '.barOpt', function () {
-        //    console.log($('input[name="barOpt"]:checked').val())
-        //    bar($('input[name="barOpt"]:checked').val());
-        //});
-
-
         $('body').on('click', '.barOpt', function (event) {
             bar($(this).children('input').val());
         });
 
-        //$(function () {
-        //    $('.barOpt').change(function () {
-        //        if ($(this).is(':checked')) {
-        //            bar($('input[name="barOpt"]:checked').val());
-        //        }
-        //    })
-        //});
     </script>
 
 }

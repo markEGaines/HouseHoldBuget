@@ -65,13 +65,15 @@ namespace HouseHoldBuget.Controllers
                              {
                                  label = c.Name,
                                  value = (from t in c.Transactions
-                                          select t.Amt).DefaultIfEmpty().Sum()
+                                          where t.Amt > 0
+                                          //select t.Amt).DefaultIfEmpty().Sum()
+                                          select t.Amt).Sum()
                              }).ToList();
 
             var dt = System.DateTimeOffset.Now;
             var beginDate = new DateTime(dt.Year, dt.Month, 1);    /// this is barOpt1
             var endDate = beginDate.AddMonths(1).AddDays(-1);      /// this is barOpt1
-                                                                   /// 
+            /// 
             ViewBag.selected = "opt1";
 
             if (barOpt == "barOpt2")

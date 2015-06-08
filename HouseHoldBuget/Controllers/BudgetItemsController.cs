@@ -27,6 +27,14 @@ namespace HouseHoldBuget.Controllers
                                where c.HouseholdId == hhId
                                select b);
 
+            ViewBag.budgetIncome = (from b in budgetItems
+                                    where b.Category.IsIncomeCategory == true
+                                    select b.BudgetAmt).Sum();
+
+            ViewBag.budgetSpending = (from b in budgetItems
+                                      where b.Category.IsIncomeCategory == false
+                                      select b.BudgetAmt).Sum();
+
             return View(budgetItems.ToList());
 
         }
@@ -49,12 +57,12 @@ namespace HouseHoldBuget.Controllers
 
         // GET: BudgetItems/Create
         [RequireHousehold]
-        public ActionResult Create()
+        public ActionResult IndexCreate()
         {
             int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
             var cats = (from c in db.Categories where c.HouseholdId == hhId select c);
             ViewBag.CategoryId = new SelectList(cats, "Id", "Name");
-            return View();
+            return PartialView();
         }
 
         // POST: BudgetItems/Create
@@ -63,8 +71,12 @@ namespace HouseHoldBuget.Controllers
         [HttpPost]
         [RequireHousehold]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Desc,BudgetAmt,AnnualFreq,MonthlyBudgetAmt,CategoryId")] BudgetItem budgetItem)
+        public async Task<ActionResult> IndexCreate([Bind(Include = "Id,Desc,BudgetAmt,AnnualFreq,MonthlyBudgetAmt,CategoryId")] BudgetItem budgetItem)
         {
+            budgetItem.AnnualFreq = budgetItem.AnnualFreq == 0 ? 12 : budgetItem.AnnualFreq;
+
+            budgetItem.MonthlyBudgetAmt = budgetItem.BudgetAmt * budgetItem.AnnualFreq / 12;
+
             if (ModelState.IsValid)
             {
                 db.BudgetItems.Add(budgetItem);
@@ -79,7 +91,7 @@ namespace HouseHoldBuget.Controllers
 
         // GET: BudgetItems/Edit/5
         [RequireHousehold]
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> IndexEdit(int? id)
         {
             if (id == null)
             {
@@ -93,7 +105,7 @@ namespace HouseHoldBuget.Controllers
             int hhId = Convert.ToInt32(User.Identity.GetHouseholdId());
             var cats = (from c in db.Categories where c.HouseholdId == hhId select c);
             ViewBag.CategoryId = new SelectList(cats, "Id", "Name", budgetItem.CategoryId);
-            return View(budgetItem);
+            return PartialView(budgetItem);
         }
 
         // POST: BudgetItems/Edit/5
@@ -102,8 +114,12 @@ namespace HouseHoldBuget.Controllers
         [HttpPost]
         [RequireHousehold]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Desc,BudgetAmt,AnnualFreq,MonthlyBudgetAmt,CategoryId")] BudgetItem budgetItem)
+        public async Task<ActionResult> IndexEdit([Bind(Include = "Id,Desc,BudgetAmt,AnnualFreq,MonthlyBudgetAmt,CategoryId")] BudgetItem budgetItem)
         {
+            budgetItem.AnnualFreq = budgetItem.AnnualFreq == 0 ? 12 : budgetItem.AnnualFreq;
+
+            budgetItem.MonthlyBudgetAmt = budgetItem.BudgetAmt * budgetItem.AnnualFreq / 12;
+
             if (ModelState.IsValid)
             {
                 db.Entry(budgetItem).State = EntityState.Modified;
@@ -118,7 +134,7 @@ namespace HouseHoldBuget.Controllers
 
         // GET: BudgetItems/Delete/5
         [RequireHousehold]
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> IndexDelete(int? id)
         {
             if (id == null)
             {
@@ -129,12 +145,12 @@ namespace HouseHoldBuget.Controllers
             {
                 return HttpNotFound();
             }
-            return View(budgetItem);
+            return PartialView(budgetItem);
         }
 
         // POST: BudgetItems/Delete/5
         [RequireHousehold]
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("IndexDelete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<HouseHoldBuget.Models.BudgetItem>
+@{
+    ViewBag.Title = "Budget Items";
+}
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Budget Amount</th>
+        <th>Annual Frequency</th>
+        <th>Monthly Budget Amt</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
+            <td>@Html.DisplayFor(modelItem => item.Desc)</td>
+            <td>@Html.DisplayFor(modelItem => item.BudgetAmt)</td>
+            <td>@Html.DisplayFor(modelItem => item.AnnualFreq)</td>
+            <td>@Html.DisplayFor(modelItem => item.MonthlyBudgetAmt)</td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+@section Scripts {
+    <script>
+        $('#menu_Dashboard').removeClass('active');
+        $('#menu_YourHousehold').removeClass('active');
+        $('#menu_Accounts').removeClass('active');
+        $('#menu_Transactions').removeClass('active');
+        $('#menu_BudgetItems').removeClass('active');
+    </script>
+}

@@ -644,11 +644,13 @@
     <Content Include="Views\Shared\_LayoutTransactions.cshtml" />
     <Content Include="Views\Transactions\IndexEdit.cshtml" />
     <Content Include="Views\Transactions\IndexCreate.cshtml" />
-    <Content Include="Views\BudgetItems\Create.cshtml" />
-    <Content Include="Views\BudgetItems\Delete.cshtml" />
+    <Content Include="Views\BudgetItems\IndexCreate.cshtml" />
+    <Content Include="Views\BudgetItems\IndexDelete.cshtml" />
     <Content Include="Views\BudgetItems\Details.cshtml" />
     <Content Include="Views\BudgetItems\Edit.cshtml" />
+    <Content Include="Views\BudgetItems\old_Index.cshtml" />
     <Content Include="Views\BudgetItems\Index.cshtml" />
+    <Content Include="Views\BudgetItems\IndexEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -66,6 +66,7 @@
                             <th>@Html.DisplayNameFor(model => model.Desc)</th>
                             <th>Category</th>
                             <th>@Html.DisplayNameFor(model => model.Amt)</th>
+                            <th></th>
                             <th>@Html.DisplayNameFor(model => model.ReconAmt)</th>
                             <th>@Html.DisplayNameFor(model => model.UpdatedBy)</th>
                         </tr>
@@ -75,13 +76,13 @@
                         <tr>
                             <td>
                                 <button data-id="@item.Id" class="btn btn-xs btn-success edit-button">Edit</button> |
-                                @*<button data-id="@item.Id" class="btn btn-xs btn-secondary detail-button">Detail</button> |*@
                                 <button data-id="@item.Id" class="btn btn-xs btn-primary delete-button">Delete</button>
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.date)</td>
                             <td>@Html.DisplayFor(modelItem => item.Desc)</td>
                             <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
                             <td>@Html.DisplayFor(modelItem => item.Amt)</td>
+                            <td><input data-id="@item.Id" type=checkbox class="recon-button" value="id" checked></td>
                             <td>@Html.DisplayFor(modelItem => item.ReconAmt)</td>
                             <td>@Html.DisplayFor(modelItem => item.UpdatedBy)</td>
                         </tr>
@@ -147,6 +148,11 @@
         $('.delete-button').click(function () {
             var id = $(this).data("id");
             $('#indexEdit').load('/Transactions/IndexDelete/' + id);
+        })
+
+        $('.recon-button').click(function () {
+            var id = $(this).data("id");
+            $('#indexEdit').load('/Transactions/IndexEdit/' + id);
         })
     </script>
 
