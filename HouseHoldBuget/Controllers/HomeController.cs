@@ -49,7 +49,88 @@ namespace HouseHoldBuget.Controllers
 
             model.recentTransInfo = trans;
 
+            var cats = (from c in db.Categories 
+                        where c.HouseholdId == hhId && c.IsIncomeCategory == false
+                        select c);
+            ViewBag.CategoryId = new SelectList(cats, "Id", "Name");
+
             return View(model);
+        }
+
+        [RequireHousehold]
+        public JsonResult GetDonutChartData(string donutOpt)
+        {
+            var hhId = Int32.Parse(User.Identity.GetHouseholdId());
+
+            var household = db.Households.Find(hhId);
+
+            var dt = System.DateTimeOffset.Now;
+
+            ViewBag.selected = "donutOpt1";                        /// this is donutOpt1   
+            var beginDate = new DateTime(dt.Year, dt.Month, 1);    /// this is donutOpt1
+            var endDate = beginDate.AddMonths(1).AddDays(-1);      /// this is donutOpt1             
+
+            if (donutOpt == "donutOpt2")
+            {
+                ViewBag.selected = "donutOpt2";
+                beginDate = new DateTime(dt.Year, dt.Month, 1).AddMonths(-1);
+                endDate = beginDate.AddMonths(1).AddDays(-1);
+            }
+            else if (donutOpt == "donutOpt3")
+            {
+                ViewBag.selected = "donutOpt3";
+                beginDate = new DateTime(dt.Year, 1, 1);
+                endDate = new DateTime(dt.Year, 12, 31);
+            }
+
+            var donutData = (from c in household.Categories
+                             where !c.IsIncomeCategory
+                             select new
+                             {
+                                 label = c.Name,
+                                 value = (from t in c.Transactions
+                                          where (t.date <= endDate && t.date >= beginDate)
+                                          where t.Amt > 0
+                                          select t.Amt).Sum()
+                             }).ToList();
+
+            return Json(new { donutData = donutData }, JsonRequestBehavior.AllowGet);
+        }
+
+        [RequireHousehold]
+        public JsonResult GetLineChartData(int? val)
+        {
+           // var  valint = Int32.Parse(val);
+
+            var hhId = Int32.Parse(User.Identity.GetHouseholdId());
+
+            var household = db.Households.Find(hhId);
+            var budgetitems = db.BudgetItems; 
+
+            var budgetAmount = (from c in household.Categories
+                                where c.IsIncomeCategory == false &&
+                                (val == null || c.Id == val.Value)
+                                from b in c.BudgetItems
+                                select b.MonthlyBudgetAmt).DefaultIfEmpty().Sum();
+                                
+
+            var lineData = (from month in Enumerable.Range(1, System.DateTime.Now.Month)
+                                                   .Select(m=> new DateTime(System.DateTime.Now.Year, m, 1))
+                           select new
+                           {
+                               monthNum = month.ToString("yyyy-MM"),  //    month.ToString("MM"),
+                               //monthLabel = month.ToString("MMMM"),
+                               actual = (from account in household.Accounts
+                                        from transaction in account.Transactions
+                                        where transaction.date.Year == System.DateTime.Now.Year &&
+                                              transaction.date.Month == month.Month &&
+                                              transaction.Category.IsIncomeCategory == false &&
+                                                   (val == null || transaction.CategoryId == val.Value)
+                                        select transaction.Amt).DefaultIfEmpty().Sum(),
+                               budget = budgetAmount
+                           });                        
+
+            return Json(lineData, JsonRequestBehavior.AllowGet);
         }
 
         [RequireHousehold]
@@ -58,17 +139,6 @@ namespace HouseHoldBuget.Controllers
             var hhId = Int32.Parse(User.Identity.GetHouseholdId());
 
             var household = db.Households.Find(hhId);
-
-            var donutData = (from c in household.Categories
-                             where !c.IsIncomeCategory
-                             select new
-                             {
-                                 label = c.Name,
-                                 value = (from t in c.Transactions
-                                          where t.Amt > 0
-                                          //select t.Amt).DefaultIfEmpty().Sum()
-                                          select t.Amt).Sum()
-                             }).ToList();
 
             var dt = System.DateTimeOffset.Now;
             var beginDate = new DateTime(dt.Year, dt.Month, 1);    /// this is barOpt1
@@ -101,7 +171,7 @@ namespace HouseHoldBuget.Controllers
 
                            }).ToList();
 
-            return Json(new { donutData = donutData, barData = barData }, JsonRequestBehavior.AllowGet);
+            return Json(new { barData = barData }, JsonRequestBehavior.AllowGet);
         }
 
         [RequireHousehold]

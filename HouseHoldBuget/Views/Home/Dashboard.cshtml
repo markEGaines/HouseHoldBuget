@@ -74,13 +74,13 @@
                 <div class="col-md-offset-1" style="position:absolute; top:15%;">
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-sm btn-default barOpt active">
-                            <input type="radio" name="barOpt" value="barOpt1" checked> Current Month
+                            <input type="radio" name="barOpt" value="barOpt1" checked> This Month
                         </label>
                         <label class="btn btn-sm btn-default barOpt">
                             <input type="radio" name="barOpt" value="barOpt2"> Last Month
                         </label>
                         <label class="btn btn-sm btn-default barOpt ">
-                            <input type="radio" name="barOpt" value="barOpt3"> Year to Date
+                            <input type="radio" name="barOpt" value="barOpt3"> YTD
                         </label>
                     </div>
                 </div>
@@ -104,8 +104,24 @@
                     <i class="fa fa-bar-chart-o"></i>
                     Spending
                 </h3>
+                <div class="col-md-offset-4" style="position:absolute; top:15%;">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-sm btn-default donutOpt active">
+                            <input type="radio" name="donutOpt" value="donutOpt1" checked> This Month
+                        </label>
+                        <label class="btn btn-sm btn-default donutOpt">
+                            <input type="radio" name="donutOpt" value="donutOpt2"> Last Month
+                        </label>
+                        <label class="btn btn-sm btn-default donutOpt ">
+                            <input type="radio" name="donutOpt" value="donutOpt3"> YTD
+                        </label>
+                    </div>
+                </div>
             </div> <!-- /.portlet-header -->
             <div class="portlet-content">
+                <div class="loading" id="donutLoader">
+                    <i class="fa fa-4x fa-spinner fa-spin"></i>
+                </div>
                 <div id="donut-chart" class="chart-holder" style="height: 250px"></div>
             </div> <!-- /.portlet-content -->
         </div>
@@ -113,26 +129,16 @@
     <div class="col-md-9 align-right">
         <div class="portlet">
             <div class="portlet-header">
-                <h3>Spending over time for all or selected categories</h3>
-                <div class="col-md-offset-4" style="position:absolute; top:15%;">
-                    <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-sm btn-default barOpt active">
-                            <input type="radio" name="barOpt" value="barOpt1" checked> Current Month
-                        </label>
-                        <label class="btn btn-sm btn-default barOpt">
-                            <input type="radio" name="barOpt" value="barOpt2"> Last Month
-                        </label>
-                        <label class="btn btn-sm btn-default barOpt ">
-                            <input type="radio" name="barOpt" value="barOpt3"> Year to Date
-                        </label>
-                    </div>
-                </div>
+                <h3>
+                    Spending trend for &nbsp;
+                    @Html.DropDownList("CategoryId", null,"All Categories", htmlAttributes: new { @onchange = "SwitchCategory(this.value)" })
+                </h3>
             </div>
             <div class="portlet-content">
-                <div class="loading" id="xbarLoader">
-                    @*<i class="fa fa-4x fa-spinner fa-spin"></i>*@
+                <div class="loading" id="lineLoader">
+                    <i class="fa fa-4x fa-spinner fa-spin"></i>
                 </div>
-                <div id="xbar-chart" class="chart-holder" style="height:250px">
+                <div id="line-chart" class="chart-holder" style="height:250px">
 
                 </div>
             </div>
@@ -141,7 +147,7 @@
 
     <a id="linkbox"></a>
 
-</div>   
+</div>
 
 @section Scripts {
 
@@ -162,6 +168,7 @@
 
     <script src="~/js/demos/charts/morris/donut.js"></script>
     <script src="~/js/demos/charts/morris/bar.js"></script>
+    <script src="~/js/demos/charts/morris/line.js"></script>
 
     <script src="~/js/plugins/sparkline/jquery.sparkline.min.js"></script>
 
@@ -206,6 +213,13 @@
             bar($(this).children('input').val());
         });
 
-    </script>
+        $('body').on('click', '.donutOpt', function (event) {
+            donut($(this).children('input').val());
+        });
 
+        function SwitchCategory(val) {
+            line(val);
+        };
+
+    </script>
 }

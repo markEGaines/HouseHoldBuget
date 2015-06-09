@@ -8,9 +8,10 @@ $(function () {
 
 });
 
-function donut() {
+function donut(donutOpt) {
     $('#donut-chart').empty();
-    $.post("/Home/GetChartData").then(function (response) {
+    $('#donutLoader').show();
+    $.post("/Home/GetDonutChartData", {donutOpt: donutOpt}).then(function (response) {
         console.log(response)
         Morris.Donut({
             element: 'donut-chart',
@@ -19,7 +20,7 @@ function donut() {
             hideHover: true,
             formatter: function (y) { return y }
         });
-    })
 
-    
+        $('#donutLoader').hide();
+    })    
 }

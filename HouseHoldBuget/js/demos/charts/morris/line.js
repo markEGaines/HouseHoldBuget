@@ -1,30 +1,29 @@
 $(function () {
 
-	if (!$('#line-chart').length) { return false; }
-	
-	line ();
+    if (!$('#line-chart').length) { return false; }
 
-	$(window).resize (App.debounce (line, 325));
+    line();
+
+    $(window).resize(App.debounce(line, 325));
 
 });
 
-function line () {
-	$('#line-chart').empty ();
-
-	Morris.Line({
-		element: 'line-chart',
-		data: [
-			{ y: '2006', a: 100, b: 90 },
-			{ y: '2007', a: 75,  b: 65 },
-			{ y: '2008', a: 50,  b: 40 },
-			{ y: '2009', a: 75,  b: 65 },
-			{ y: '2010', a: 50,  b: 40 },
-			{ y: '2011', a: 75,  b: 65 },
-			{ y: '2012', a: 100, b: 90 }
-		],
-		xkey: 'y',
-		ykeys: ['a', 'b', 'c'],
-		labels: ['Series A', 'Series B', 'Series C'],
-		lineColors: App.chartColors
-	});
+function line(lineOpt) {
+    $('#line-chart').empty();
+    $('#lineLoader').show();
+    $.post("/Home/GetLineChartData", { val: lineOpt }).then(function (data) {
+        console.log(data)
+        Morris.Line({
+            element: 'line-chart',
+            data: data,
+            xkey: 'monthNum',
+            ykeys: ['actual', 'budget'],
+            labels: ['Actual', 'Budget'],
+            xlabels: 'month',
+            lineColors: App.chartColors,
+            smooth: false,
+            parseTime: false
+        });
+        $('#lineLoader').hide();
+    })
 }
