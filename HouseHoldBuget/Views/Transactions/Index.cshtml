@@ -62,13 +62,13 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>@Html.DisplayNameFor(model => model.date)</th>
-                            <th>@Html.DisplayNameFor(model => model.Desc)</th>
+                            <th><strong>Date</strong></th>
+                            <th><strong>Desc</strong></th>
                             <th>Category</th>
                             <th>@Html.DisplayNameFor(model => model.Amt)</th>
                             <th></th>
-                            <th>@Html.DisplayNameFor(model => model.ReconAmt)</th>
-                            <th>@Html.DisplayNameFor(model => model.UpdatedBy)</th>
+                            <th><strong>Reconciled</strong></th>
+                            <th><strong>Updated By</strong></th>
                         </tr>
                     </thead>
                     @foreach (var item in Model)
@@ -97,8 +97,8 @@
 @section Scripts {
 
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -127,7 +127,6 @@
     <script src="~/js/plugins/icheck/jquery.icheck.min.js"></script>
     <script src="~/js/plugins/select2/select2.js"></script>
     <script src="~/js/App.js"></script>
-    <script src="~/js/demos/dashboard.js"></script>
 
     <script>
         $('.create-button').click(function () {
@@ -154,13 +153,16 @@
             var id = $(this).data("id");
             $('#indexEdit').load('/Transactions/IndexEdit/' + id);
         })
+
+
+       
     </script>
 
 
 
-    <script>
+    @*<script>
         $(function () {
             $("#tdate").datepicker()
         });
-    </script>
+    </script>*@
 }

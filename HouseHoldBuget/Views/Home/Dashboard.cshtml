@@ -128,10 +128,10 @@
     </div>
     <div class="col-md-9 align-right">
         <div class="portlet">
-            <div class="portlet-header">
-                <h3>
+            <div class="portlet-header" style="height:40px">
+                <h3 style="padding-top:6px">
                     Spending trend for &nbsp;
-                    @Html.DropDownList("CategoryId", null,"All Categories", htmlAttributes: new { @onchange = "SwitchCategory(this.value)" })
+                    @Html.DropDownList("CategoryId", null, "All Categories", htmlAttributes: new { @onchange = "SwitchCategory(this.value)" })
                 </h3>
             </div>
             <div class="portlet-content">
@@ -175,7 +175,6 @@
     <script src="~/js/plugins/fullcalendar/fullcalendar.min.js"></script>
     <script src="~/js/demos/calendar.js"></script>
 
-    <script src="~/js/demos/dashboard.js"></script>
 
     <script>
         $('#menu_Dashboard').addClass('active');

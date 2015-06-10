@@ -656,6 +656,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="js\plugins\datepicker\css\" />
     <Folder Include="js\plugins\datepicker\js\" />
+    <Folder Include="Views\ListCats\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

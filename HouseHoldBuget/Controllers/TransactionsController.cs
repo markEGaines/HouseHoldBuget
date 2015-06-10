@@ -154,8 +154,8 @@ namespace HouseHoldBuget.Controllers
                                            select t).FirstOrDefault().Amt;
 
             var deltaRecon = transaction.ReconAmt - (from t in db.Transactions.AsNoTracking()
-                                           where t.Id == transaction.Id
-                                           select t).FirstOrDefault().ReconAmt;
+                                                     where t.Id == transaction.Id
+                                                     select t).FirstOrDefault().ReconAmt;
 
             transaction.UpdatedBy = user.Email;
             transaction.UpdateDate = System.DateTimeOffset.Now;
@@ -215,6 +215,25 @@ namespace HouseHoldBuget.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index", new { accountId = transaction.BankAccountId });
         }
+
+        //[RequireHousehold]
+        //public JsonResult GetCats(string term)
+        //{
+        //    var hhId = Int32.Parse(User.Identity.GetHouseholdId());
+
+        //    var household = db.Households.Find(hhId);
+        //    var budgetitems = db.BudgetItems;
+
+        //    var cats = (from c in db.Categories
+        //                where c.HouseholdId == hhId && c.Name.Contains(term)
+        //                select new
+        //                {
+        //                    label = c.Name,
+        //                    value = c.Id
+        //                });
+
+        //    return Json(cats, JsonRequestBehavior.AllowGet);
+        //}
 
         protected override void Dispose(bool disposing)
         {
