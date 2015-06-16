@@ -8,19 +8,19 @@
 <div class="row">
     <div class="col-md-4">
         <p>
-            @Html.ActionLink("Create New", "Create")
+            <button class=" btn btn-xs btn-success" onclick="location.href='@Url.Action("Create","BankAccounts")'">Create</button>
         </p>
         <div class="table-responsive">
             <table id="accts" class="display text-nowrap" cellspacing="0" width="100">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>
                             @Html.DisplayNameFor(model => model.Name)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Balance)
                         </th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,14 +28,14 @@
                     {
                         <tr>
                             <td>
+                                <button class="btn btn-xs btn-success" onclick="location.href='@Url.Action("Edit", "BankAccounts", new { id = item.Id })'">Edit</button> |
+                                <button class="btn btn-xs btn-primary" onclick="location.href='@Url.Action("Delete", "BankAccounts", new { id = item.Id })'">Delete</button>
+                            </td>
+                            <td>
                                 @Html.DisplayFor(modelItem => item.Name)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Balance)
-                            </td>
-                            <td>
-                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                             </td>
                         </tr>
                     }
@@ -53,9 +53,11 @@
                 "paging": false,
                 "info": false,
                 "filter": false,
-                "order": [[0, "asc"]]
+                "order": [[1, "asc"]]
             });
         });
+
+
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")
