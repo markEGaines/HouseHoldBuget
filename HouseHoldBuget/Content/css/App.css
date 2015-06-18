@@ -2806,7 +2806,7 @@ table.dataTable th:active {
   top: 0;
   left: 0;
   z-index: 20;
-  width: 100%;
+  width: 99%;
   height: 38px;
   padding-right: 25px;
   padding-left: 240px;

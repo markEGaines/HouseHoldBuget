@@ -9,7 +9,7 @@
     <div id="content-container">*@
 <div class="row">
 
-    <div class="col-md-3">
+    <div class="col-lg-3">
         <div class="portlet">
             <div class="portlet-header">
                 <h3>
@@ -18,23 +18,26 @@
                 </h3>
             </div> <!-- /.portlet-header -->
             <div class="portlet-content">
-                <table id="accts" style="cursor: pointer;zoom:1.3" class="display text-nowrap" cellspacing="0" width="100">
-                    <thead style="display:none;">
-                        <tr>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.bankInfo)
-                        {
-                            <tr id="@item.BankAccountId" class="account-link">
-                                <td>@item.BankAccountName</td>
-                                <td align="right">@item.BankAccountBalance</td>
+                <container>
+                    @*<table id="accts" style="cursor: pointer;zoom:1.3" class="display text-nowrap" cellspacing="0" width="100">*@
+                    <table id="accts" style="cursor: pointer" class="display text-nowrap">
+                        <thead style="display:none;">
+                            <tr>
+                                <th></th>
+                                <th></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.bankInfo)
+                            {
+                                <tr id="@item.BankAccountId" class="account-link">
+                                    <td>@item.BankAccountName</td>
+                                    <td align="right">@item.BankAccountBalance</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </container>
             </div> <!-- /.portlet -->
         </div>
         <div class="portlet">
@@ -42,32 +45,30 @@
                 <h3>Recent Transactions</h3>
             </div>
             <div class="portlet-content">
-                <table id="trans" class="display text-nowrap" style="zoom: 1.3" cellspacing="0" width="100">
-                    <thead style="display:none;">
-                        <tr>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.recentTransInfo)
-                        {
-                            <tr>
-                                <td>
-                                    <p style="margin:0 0 0">
-                                        @Html.DisplayFor(modelitem => item.date) &nbsp;-&nbsp; @item.BankAccount.Name
-                                    </p>
-                                    <p style="margin:0 0 0">
-                                        @item.Desc &nbsp;-&nbsp; @item.Amt
-                                    </p>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <container>
+                    <table id="trans" class="table table-responsive">
+
+                        <tbody>
+                            @foreach (var item in Model.recentTransInfo)
+                            {
+                                <tr style=" border-bottom: 2px thin solid;">
+                                    <td>                                     
+                                            @Html.DisplayFor(modelitem => item.date) &nbsp; - &nbsp; @item.BankAccount.Name<br />                                                                               
+                                            @item.Desc                                       
+                                    </td>
+                                    
+                                    <td style="text-align:right; vertical-align:bottom;">
+                                            @item.Amt                                   
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </container>
             </div>
         </div>
     </div>
-    <div class="col-md-9 align-right">
+    <div class="col-lg-9 align-right">
         <div class="portlet">
             <div class="portlet-header">
                 <h3>Budget </h3>
@@ -201,12 +202,12 @@
             "order": [0, "asc"]
         });
 
-        $('#trans').DataTable({
-            "paging": false,
-            "info": false,
-            "filter": false,
-            "order": [[0, "desc"]]
-        });
+        //$('#trans').DataTable({
+        //    "paging": false,
+        //    "info": false,
+        //    "filter": false,
+        //    "order": [[0, "desc"]]
+        //});
 
         $('body').on('click', '.barOpt', function (event) {
             bar($(this).children('input').val());
